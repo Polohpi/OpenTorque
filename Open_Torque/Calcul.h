@@ -8,7 +8,7 @@ void Measure()
   if(millis() > millisMeasure + DELAYMEASURE)
   {
   valmeasure = loadcell.read();
-  if(valmeasure<50)
+  if(valmeasure<75)
   {
     valmeasure = 0;
   }
