@@ -3,20 +3,26 @@
 
 #include "Tool.h"
 #include "Init.h"
+#include "Calcul.h"
 
 void Acceuil()
 {
-  ssd1306_setFixedFont(ssd1306xled_font6x8);
-  ssd1306_clearScreen();
-  for (int i =0; i<10; i++)
-  {
-      char s[] = "";
-  sprintf(s, "Temperature = ", String(i));
+  ssd1306_setFixedFont(comic_sans_font24x32_123);
+  //ssd1306_setFixedFont(ssd1306xled_font8x16);
+
+  if(valmeasure < oldvalmeasure -10 || valmeasure > oldvalmeasure +10)
+  { 
+  //ssd1306_clearScreen();
+  char s[40];
+  Torque = valmeasure/1000*9.81/0.4;  
+  Serial.println("torque : " + (String)Torque);
+  sprintf(s, "%d", (int)Torque);
+  oldvalmeasure = valmeasure;
   ssd1306_printFixed(0, 16, s, STYLE_BOLD);
-  delay(1000);
+  Serial.println("val : " + (String)valmeasure); 
   }
-  
-  while(1);
+  yield();
+  delay(100);
 }
 
 #endif
