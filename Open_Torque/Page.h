@@ -10,25 +10,33 @@ void Acceuil()
   int posx = 70;
   int posy = 15;
   ssd1306_clearScreen();
+  #ifdef DEBUG
+  Serial.println("Acceuil");
+  #endif
+  
   delay(10);
   
   while(1){
-  ssd1306_setFixedFont(comic_sans_font24x32_123);
-  ssd1306_setFixedFont(ssd1306xled_font8x16);
-  ssd1306_printFixed(posx+30, HEIGHTOLED-posy+14, "N/m", STYLE_NORMAL);
+  if(tare == false){
+  if(buttonENTERstate == true){buttonENTERstate = false; Tare();}
+  if(valmeasure<200){
+    ssd1306_setFixedFont(comic_sans_font24x32_123);
+    printval(posx, posy, target);
+    if(buttonUPstate == true){buttonUPstate = false;target++;}
+    if(buttonDOWNstate == true){buttonDOWNstate = false;target--;}
+  }
+  else
+  {
 
   if(tare == true){tare = false;ssd1306_clearScreen();}
   
-  Torque = (valmeasure/1000*9.81)/(bdl/1000);
   ssd1306_setFixedFont(comic_sans_font24x32_123);
   printval(posx, posy, Torque);
-  ssd1306_setFixedFont(ssd1306xled_font8x16);  
-
-  Serial.println("torque : " + (String)Torque);
-  Serial.println("val : " + (String)valmeasure); 
-
+  }
+  ssd1306_setFixedFont(ssd1306xled_font8x16);
+  ssd1306_printFixed(posx+30, HEIGHTOLED-posy+14, "N/m", STYLE_NORMAL);
+  }
   yield();
-  delay(100);
   }
 }
 

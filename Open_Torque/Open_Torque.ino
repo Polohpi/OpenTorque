@@ -2,6 +2,7 @@
 #include "Tool.h"
 #include "Init.h"
 #include "Calcul.h"
+#include "Interaction.h"
 
 void setup() {
 
@@ -10,12 +11,23 @@ void setup() {
   loadcell.tare();
   ssd1306_128x64_i2c_init();
   Scheduler.startLoop(Measure);
+  Scheduler.startLoop(WatchTargetBuzz);
+  
+  #ifdef DEBUG
+  Serial.println("Setup");
+  #endif
+  
   ssd1306_clearScreen();
 
-  pinMode(10, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(10), Tare, FALLING);
-
-
+  pinMode(BUTTONUP, INPUT_PULLUP);
+  pinMode(BUTTONDOWN, INPUT_PULLUP);
+  pinMode(BUTTONENTER, INPUT_PULLUP);
+  pinMode(BUZZ, OUTPUT);
+  digitalWrite(BUZZ, LOW);
+  
+  attachInterrupt(digitalPinToInterrupt(BUTTONUP), buttonUP, FALLING);
+  attachInterrupt(digitalPinToInterrupt(BUTTONDOWN), buttonDOWN, FALLING);
+  attachInterrupt(digitalPinToInterrupt(BUTTONENTER), buttonENTER, FALLING);
 }
 
 void loop() {

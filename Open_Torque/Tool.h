@@ -5,8 +5,10 @@
 #include <HX711.h>
 #include "ssd1306.h"
 #include <Scheduler.h>
+#include <Buzzer.h>
 
 HX711 loadcell = HX711();
+Buzzer buzzer(9);
 
 void printval(int x, int y, int value)
 {
@@ -32,13 +34,26 @@ void printval(int x, int y, int value)
     sprintf(s, "%d", value);
     ssd1306_printFixed(x, HEIGHTOLED-y, s, STYLE_BOLD);
   }
+  yield();
 }
 
 void Tare()
 {
+
+  tare = true;
   loadcell.tare();
-  //Serial.println("Tare done");
-  tare = true; 
+  ssd1306_clearScreen();
+  ssd1306_setFixedFont(ssd1306xled_font8x16);
+  ssd1306_printFixed(25, 30, "TARE OK !", STYLE_BOLD);
+  millisTare = millis();
+  while(millis() < millisTare + DELAYTARE)
+  {
+    yield();
+  }
+  ssd1306_clearScreen();
+  tare = false;
+  millisTare = millis();
+  yield();
 }
 
 
