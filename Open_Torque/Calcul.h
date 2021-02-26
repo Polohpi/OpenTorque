@@ -2,6 +2,8 @@
 #define CALCUL_H
 
 #include "Init.h"
+#include "Interaction.h"
+#include "Page.h"
 
 void Measure()
 {
@@ -20,7 +22,7 @@ void Measure()
   millisMeasure = millis();
   }
   Torque = (valmeasure/1000*9.81)*(bdl/1000);
-  #ifdef DEBUG
+  #ifdef DEBUGOT
   Serial.println("valmeasure : " + (String)valmeasure);
   Serial.println("Torque : " + (String)Torque);
   #endif  
@@ -31,7 +33,7 @@ void Measure()
 {  
   int i = Torque*((DELAYBUZZOFF-DELAYBUZZON)/(target-target*prctbuzz))+(DELAYBUZZON*target-DELAYBUZZOFF*target*prctbuzz)/(target-target*prctbuzz);
   //
-  #ifdef DEBUG
+  #ifdef DEBUGOT
   Serial.println("axb : " + String(i));
   #endif
   return i;

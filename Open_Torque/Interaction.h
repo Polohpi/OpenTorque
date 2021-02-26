@@ -2,56 +2,42 @@
 #define INTERACTION_H
 
 #include "Init.h"
+#include "Page.h"
+#include "Tool.h"
 
 void buttonUP()
 {
-  if(millis() > millisMeasure + DELAYBUTTON)
+  if(millis() > millisButton + DELAYBUTTON)
   {
     buttonUPstate = true;
-    #ifdef DEBUG
+    #ifdef DEBUGOT
     Serial.println("ButtonUP");
     #endif
-    millisMeasure = millis();
   }
   yield();
 }
 
 void buttonDOWN()
-{  
-  buttonDOWNstate = true;
-  #ifdef DEBUG
-  Serial.println("ButtonDOWN");
-  #endif
-
-    if(millis() > millisMeasure + DELAYBUTTON)
-    {
+{ 
+  if(millis() > millisButton + DELAYBUTTON)
+  {
     buttonDOWNstate = true;
-    #ifdef DEBUG
+    #ifdef DEBUGOT
     Serial.println("ButtonDOWN");
     #endif
-    millisMeasure = millis();
-    }
-    
+  }
   yield();
 }
 
 void buttonENTER()
 {
-
-  buttonENTERstate = true;
-  #ifdef DEBUG
-  Serial.println("ButtonENTER");
-  #endif
-
-  if(millis() > millisMeasure + DELAYBUTTON)
+  if(millis() > millisButton + DELAYBUTTON)
   {
     buttonENTERstate = true;
-    #ifdef DEBUG
+    #ifdef DEBUGOT
     Serial.println("ButtonENTER");
     #endif
-    millisMeasure = millis();
   }
-
   yield();
 }
 

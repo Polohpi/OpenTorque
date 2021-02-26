@@ -13,7 +13,7 @@ void setup() {
   Scheduler.startLoop(Measure);
   Scheduler.startLoop(WatchTargetBuzz);
   
-  #ifdef DEBUG
+  #ifdef DEBUGOT
   Serial.println("Setup");
   #endif
   
@@ -28,6 +28,8 @@ void setup() {
   attachInterrupt(digitalPinToInterrupt(BUTTONUP), buttonUP, FALLING);
   attachInterrupt(digitalPinToInterrupt(BUTTONDOWN), buttonDOWN, FALLING);
   attachInterrupt(digitalPinToInterrupt(BUTTONENTER), buttonENTER, FALLING);
+
+  target = eeprom.read(ADD_EEPROM);
 }
 
 void loop() {

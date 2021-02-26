@@ -6,7 +6,9 @@
 #include "ssd1306.h"
 #include <Scheduler.h>
 #include <Buzzer.h>
+#include "AT24C256.h"
 
+AT24C256 eeprom = AT24C256();
 HX711 loadcell = HX711();
 Buzzer buzzer(9);
 
@@ -39,20 +41,15 @@ void printval(int x, int y, int value)
 
 void Tare()
 {
-
-  tare = true;
-  loadcell.tare();
   ssd1306_clearScreen();
-  ssd1306_setFixedFont(ssd1306xled_font8x16);
-  ssd1306_printFixed(25, 30, "TARE OK !", STYLE_BOLD);
-  millisTare = millis();
+  
   while(millis() < millisTare + DELAYTARE)
   {
-    yield();
+  loadcell.tare();
+  ssd1306_setFixedFont(ssd1306xled_font8x16);
+  ssd1306_printFixed(25, 30, "TARE OK !", STYLE_BOLD);
   }
   ssd1306_clearScreen();
-  tare = false;
-  millisTare = millis();
   yield();
 }
 

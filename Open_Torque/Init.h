@@ -1,8 +1,6 @@
 #ifndef INIT_H
 #define INIT_H
 
-#include "Tool.h"
-
 #define HEIGHTOLED 39
 #define WIDHTOLED 104
 #define HEIGHTCHAR 32
@@ -14,16 +12,21 @@
 #define BUTTONENTER 9
 #define BUTTONUP 8
 #define BUTTONDOWN 7
-#define DELAYBUTTON 20
+#define DELAYBUTTON 100
+#define DELAYBUTTON2 2000
 #define DELAYTARE 2000
+#define TORQUEMIN 2
+#
 
-//#define DEBUG
+#define ADD_EEPROM 0
+
+//#define DEBUGOT
 
 float Torque = 0;
 float valmeasure = 0;
 float oldvalmeasure = 0;
-float bdl = 500;
-float prctbuzz =0.5;
+float bdl = 350;
+float prctbuzz =0.75;
 
 
 int buzzstate = LOW;
@@ -40,11 +43,12 @@ boolean hec = false;
 
 boolean tare = false;
 
-#define DELAYMEASURE 100
+#define DELAYMEASURE 50
 
 boolean buttonUPstate = false;
 boolean buttonDOWNstate = false;
 boolean buttonENTERstate = false;
+boolean buttonENTER2state = false;
 
 
 #endif
