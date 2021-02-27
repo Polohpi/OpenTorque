@@ -16,7 +16,6 @@
 #define DELAYBUTTON2 2000
 #define DELAYTARE 2000
 #define TORQUEMIN 2
-#
 
 #define ADD_EEPROM 0
 
@@ -41,7 +40,7 @@ unsigned long millisTare = 0;
 boolean dec = false;
 boolean hec = false;
 
-boolean tare = false;
+boolean PauseAcceuil = false;
 
 #define DELAYMEASURE 50
 
@@ -50,5 +49,55 @@ boolean buttonDOWNstate = false;
 boolean buttonENTERstate = false;
 boolean buttonENTER2state = false;
 
+boolean MainMenuSelectionState = false;
+boolean ModeMenuSelectionState = false;
+boolean TorqueMenuSelectionState = false;
+boolean ScrewMenuSelectionState = false;
+boolean SettingMenuSelectionState = false;
+boolean UnityMenuSelectionState = false;
 
+const char *MainItems[] =
+{
+    "Exit",
+    "Tare",
+    "Mode",
+    "Setting",
+};
+
+const char *ModeItems[] =
+{
+    "Back",
+    "Torque",
+    "Angular",
+    "Weight",
+};
+
+const char *SettingItems[] =
+{
+    "Back",
+    "Lever",
+    "Unity",
+    "Calibration",
+};
+
+const char *TorqueItems[] =
+{
+    "Back",
+    "FreeMode",
+    "Screw",
+};
+
+const char *UnityItems[] =
+{
+    "Back",
+    "Weight",
+    "Long",
+};
+
+const char *ScrewItems[] =
+{
+    "Back",
+    "Metric",
+    "US",
+};
 #endif

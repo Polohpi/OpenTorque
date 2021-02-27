@@ -2,8 +2,6 @@
 #define INTERACTION_H
 
 #include "Init.h"
-#include "Page.h"
-#include "Tool.h"
 
 void buttonUP()
 {

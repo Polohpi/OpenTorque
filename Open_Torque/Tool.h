@@ -11,6 +11,12 @@
 AT24C256 eeprom = AT24C256();
 HX711 loadcell = HX711();
 Buzzer buzzer(9);
+SAppMenu MainMenu;
+SAppMenu ModeMenu;
+SAppMenu SettingMenu;
+SAppMenu TorqueMenu;
+SAppMenu UnityMenu;
+SAppMenu ScrewMenu;
 
 void printval(int x, int y, int value)
 {
@@ -50,6 +56,8 @@ void Tare()
   ssd1306_printFixed(25, 30, "TARE OK !", STYLE_BOLD);
   }
   ssd1306_clearScreen();
+  MainMenuSelectionState = true;
+  
   yield();
 }
 

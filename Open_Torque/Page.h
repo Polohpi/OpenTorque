@@ -3,34 +3,64 @@
 
 #include "Tool.h"
 #include "Init.h"
-#include "Calcul.h"
 
-void Acceuil()
+void WeightPage()
+{
+  
+}
+
+void ManualPage()
+{
+  
+}
+
+void LeverPage()
+{
+  
+}
+
+void CalibrationPage()
+{
+  
+}
+
+void AngularPage()
+{
+  
+}
+
+void LongPage()
+{
+  
+}
+
+void USPage()
+{
+  
+}
+
+void AcceuilPage()
 {
   int posx = 70;
   int posy = 15;
   ssd1306_clearScreen();
+  
   #ifdef DEBUGOT
   Serial.println("Acceuil");
   #endif
   
-  delay(10);
-  
   while(1)
   {
-    if(tare == false)
+    if(PauseAcceuil == false)
     {
-      if(buttonENTERstate == true)
-      {
-        millisButton = millis();
-        millisTare = millis();
-        buttonENTERstate = false;
-        Tare();
-      }
+      ssd1306_setFixedFont(ssd1306xled_font8x16);
+      ssd1306_printFixed(posx+30, HEIGHTOLED-posy+14, "N/m", STYLE_NORMAL);
+      
       if(valmeasure<200)
       {
         ssd1306_setFixedFont(comic_sans_font24x32_123);
         printval(posx, posy, target);
+        
         if(buttonUPstate == true) 
         {
           millisButton = millis();
@@ -38,6 +68,7 @@ void Acceuil()
           target++;
           eeprom.write(target, ADD_EEPROM);
         }
+              
         if(buttonDOWNstate == true)
         {
           millisButton = millis();
@@ -48,15 +79,20 @@ void Acceuil()
           }
           eeprom.write(target, ADD_EEPROM);
         }
+        
+        if(buttonENTERstate == true)
+        { 
+          millisButton = millis();
+          buttonENTERstate = false;
+          MainMenuSelectionState = true;
+          break;
+        }
       }
       else
       {
-        if(tare == true){tare = false;ssd1306_clearScreen();} 
         ssd1306_setFixedFont(comic_sans_font24x32_123);
         printval(posx, posy, Torque);
       }
-      ssd1306_setFixedFont(ssd1306xled_font8x16);
-      ssd1306_printFixed(posx+30, HEIGHTOLED-posy+14, "N/m", STYLE_NORMAL);
     }
   yield();
   }
