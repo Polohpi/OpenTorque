@@ -18,7 +18,7 @@ void setup() {
   Scheduler.startLoop(TorqueMenuSelection);
   Scheduler.startLoop(ScrewMenuSelection);
   Scheduler.startLoop(SettingMenuSelection);
-  Scheduler.startLoop(UnityMenuSelection);
+  Scheduler.startLoop(UnitMenuSelection);
   
   #ifdef DEBUGOT
   Serial.println("Setup");
@@ -36,18 +36,26 @@ void setup() {
   attachInterrupt(digitalPinToInterrupt(BUTTONDOWN), buttonDOWN, FALLING);
   attachInterrupt(digitalPinToInterrupt(BUTTONENTER), buttonENTER, FALLING);
 
-  target = eeprom.read(ADD_EEPROM);
+  target = eeprom.read(TARGET_ADD_EEPROM);
+  LastMode = eeprom.read(LASTMODE_ADD_EEPROM);
+  WeightUnit = eeprom.read(WEIGHTUNIT_ADD_EEPROM);
+  LongUnit = eeprom.read(LONGUNIT_ADD_EEPROM);
+  lever = eeprom.read(LEVER_ADD_EEPROM)*10;
+
+  SetUnit();
   
   ssd1306_createMenu( &MainMenu, MainItems, sizeof(MainItems) / sizeof(char *) );
   ssd1306_createMenu( &ModeMenu, ModeItems, sizeof(ModeItems) / sizeof(char *) );
   ssd1306_createMenu( &SettingMenu, SettingItems, sizeof(SettingItems) / sizeof(char *) );
   ssd1306_createMenu( &TorqueMenu, TorqueItems, sizeof(TorqueItems) / sizeof(char *) );
-  ssd1306_createMenu( &UnityMenu, UnityItems, sizeof(UnityItems) / sizeof(char *) );
+  ssd1306_createMenu( &UnitMenu, UnitItems, sizeof(UnitItems) / sizeof(char *) );
   ssd1306_createMenu( &ScrewMenu, ScrewItems, sizeof(ScrewItems) / sizeof(char *) );
-  
 }
 
 void loop() {
-    AcceuilPage(); 
+  DoLastMode();
+  while(1)
+  {
     yield();
+  }
 }

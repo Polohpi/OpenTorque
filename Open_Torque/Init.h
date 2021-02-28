@@ -13,23 +13,55 @@
 #define BUTTONUP 8
 #define BUTTONDOWN 7
 #define DELAYBUTTON 100
-#define DELAYBUTTON2 2000
 #define DELAYTARE 2000
 #define TORQUEMIN 2
+#define LEVERMAX 1500
+#define LEVERMIN 200
 
-#define ADD_EEPROM 0
+#define TARGET_ADD_EEPROM 0
+#define LASTMODE_ADD_EEPROM 1
+#define WEIGHTUNIT_ADD_EEPROM 2
+#define LONGUNIT_ADD_EEPROM 3
+#define LEVER_ADD_EEPROM 4
+
+#define MANUALMODE 0
+#define METRICMODE 1
+#define USMODE 2
+#define ANGULARMODE 3
+#define WEIGHTMODE 4
+
+#define G 0
+#define KG 1
+#define N 2
+#define DN 3
+#define POUND 4
+#define OUNCE 5
+
+#define CM 0
+#define DM 1
+#define M 2
+#define INCH 3
+#define FEET 4
+
 
 //#define DEBUGOT
 
 float Torque = 0;
 float valmeasure = 0;
 float oldvalmeasure = 0;
-float bdl = 350;
+int lever;
 float prctbuzz =0.75;
 
 
 int buzzstate = LOW;
-int target = 20;
+int target;
+int LastMode;
+
+int WeightUnit;
+int LongUnit;
+const char *Unit;
+float WeightRatio;
+float LongRatio;
 
 unsigned long prevbuzzmillis = 0;
 
@@ -54,7 +86,7 @@ boolean ModeMenuSelectionState = false;
 boolean TorqueMenuSelectionState = false;
 boolean ScrewMenuSelectionState = false;
 boolean SettingMenuSelectionState = false;
-boolean UnityMenuSelectionState = false;
+boolean UnitMenuSelectionState = false;
 
 const char *MainItems[] =
 {
@@ -76,18 +108,18 @@ const char *SettingItems[] =
 {
     "Back",
     "Lever",
-    "Unity",
+    "Unit",
     "Calibration",
 };
 
 const char *TorqueItems[] =
 {
     "Back",
-    "FreeMode",
+    "Manual",
     "Screw",
 };
 
-const char *UnityItems[] =
+const char *UnitItems[] =
 {
     "Back",
     "Weight",

@@ -20,7 +20,7 @@ void Measure()
     }
     millisMeasure = millis();
   }
-  Torque = (valmeasure/1000*9.81)*(bdl/1000);
+  Torque = (valmeasure*WeightRatio)*(lever/LongRatio);
   #ifdef DEBUGOT
   Serial.println("valmeasure : " + (String)valmeasure);
   Serial.println("Torque : " + (String)Torque);
@@ -70,7 +70,7 @@ void ScrewMenuSelection()
     ssd1306_clearScreen();
     while(1)
     {
-      ssd1306_setFixedFont(ssd1306xled_font6x8);
+      ssd1306_setFixedFont(ssd1306xled_font8x16);
       ssd1306_showMenu( &TorqueMenu );
       
       if(buttonENTERstate == true)
@@ -128,7 +128,8 @@ void TorqueMenuSelection()
     ssd1306_clearScreen();
     while(1)
     {
-      ssd1306_setFixedFont(ssd1306xled_font6x8);
+      ssd1306_setFixedFont(ssd1306xled_font8x16);
+      //ssd1306_setFixedFont(ssd1306xled_font6x8);
       ssd1306_showMenu( &TorqueMenu );
       
       if(buttonENTERstate ==true)
@@ -185,7 +186,7 @@ void ModeMenuSelection()
     ssd1306_clearScreen();
     while(1)
     {
-      ssd1306_setFixedFont(ssd1306xled_font6x8);
+      ssd1306_setFixedFont(ssd1306xled_font8x16);
       ssd1306_showMenu( &ModeMenu );
       
       if(buttonENTERstate ==true)
@@ -242,37 +243,37 @@ void ModeMenuSelection()
   yield();
 }
 
-void UnityMenuSelection()
+void UnitMenuSelection()
 {
-  if(UnityMenuSelectionState == true)
+  if(UnitMenuSelectionState == true)
   {
     ssd1306_clearScreen();
     while(1)
     {
-      ssd1306_setFixedFont(ssd1306xled_font6x8);
-      ssd1306_showMenu( &UnityMenu );
+      ssd1306_setFixedFont(ssd1306xled_font8x16);
+      ssd1306_showMenu( &UnitMenu );
       if(buttonENTERstate ==true)
       {
         millisButton = millis();
         buttonENTERstate = false;
-        if(ssd1306_menuSelection(&UnityMenu) == 0)
+        if(ssd1306_menuSelection(&UnitMenu) == 0)
         {
           ssd1306_clearScreen();
-          UnityMenuSelectionState = false;
+          UnitMenuSelectionState = false;
           SettingMenuSelectionState = true;
           goto labelMenu;
         }
-        if(ssd1306_menuSelection(&UnityMenu) == 1)
+        if(ssd1306_menuSelection(&UnitMenu) == 1)
         {
           ssd1306_clearScreen();
-          UnityMenuSelectionState = false;
-          WeightPage();
+          UnitMenuSelectionState = false;
+          WeightUnitPage();
           goto labelMenu;
         }
-        if(ssd1306_menuSelection(&UnityMenu) == 2)
+        if(ssd1306_menuSelection(&UnitMenu) == 2)
         {
           ssd1306_clearScreen();
-          UnityMenuSelectionState = false;
+          UnitMenuSelectionState = false;
           LongPage();
           goto labelMenu;
         }
@@ -281,15 +282,15 @@ void UnityMenuSelection()
       {
         millisButton = millis();
         buttonDOWNstate = false;
-        ssd1306_menuDown(&UnityMenu);
-        ssd1306_updateMenu(&UnityMenu);
+        ssd1306_menuDown(&UnitMenu);
+        ssd1306_updateMenu(&UnitMenu);
       }
       if(buttonUPstate == true)
       {
         millisButton = millis();
         buttonUPstate = false;
-        ssd1306_menuUp(&UnityMenu);
-        ssd1306_updateMenu(&UnityMenu);
+        ssd1306_menuUp(&UnitMenu);
+        ssd1306_updateMenu(&UnitMenu);
       }
       yield();
     }
@@ -305,7 +306,7 @@ void SettingMenuSelection()
     ssd1306_clearScreen();
     while(1)
     {
-      ssd1306_setFixedFont(ssd1306xled_font6x8);
+      ssd1306_setFixedFont(ssd1306xled_font8x16);
       ssd1306_showMenu( &SettingMenu );
       if(buttonENTERstate == true)
       {
@@ -328,9 +329,8 @@ void SettingMenuSelection()
         if(ssd1306_menuSelection(&SettingMenu) == 2)
         {
           ssd1306_clearScreen();
-          ssd1306_setFixedFont(ssd1306xled_font6x8);
           SettingMenuSelectionState = false; 
-          UnityMenuSelectionState = true;
+          UnitMenuSelectionState = true;
           goto labelMenu;
         }
         if(ssd1306_menuSelection(&SettingMenu) == 3)
@@ -366,11 +366,10 @@ void MainMenuSelection()
 {
   if(MainMenuSelectionState == true)
   {
-    PauseAcceuil = true;
     ssd1306_clearScreen();
     while(1)
     {
-      ssd1306_setFixedFont(ssd1306xled_font6x8);
+      ssd1306_setFixedFont(ssd1306xled_font8x16);
       ssd1306_showMenu( &MainMenu );
       if(buttonENTERstate ==true)
       {
@@ -381,7 +380,7 @@ void MainMenuSelection()
         {
           ssd1306_clearScreen();
           MainMenuSelectionState = false;
-          PauseAcceuil = false;
+          DoLastMode();
           goto labelMenu;
         }
         if(ssd1306_menuSelection(&MainMenu) == 1)
@@ -412,7 +411,6 @@ void MainMenuSelection()
         millisButton = millis();
         buttonDOWNstate = false;
         ssd1306_menuDown(&MainMenu);
-        ssd1306_setFixedFont(ssd1306xled_font6x8);
         ssd1306_updateMenu(&MainMenu);
       }
       if(buttonUPstate == true)
@@ -420,7 +418,6 @@ void MainMenuSelection()
         millisButton = millis();
         buttonUPstate = false;
         ssd1306_menuUp(&MainMenu);
-        ssd1306_setFixedFont(ssd1306xled_font6x8);
         ssd1306_updateMenu(&MainMenu);
       }
       yield();
