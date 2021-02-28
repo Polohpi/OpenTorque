@@ -12,10 +12,6 @@ int GetLastMode()
 
 void WeightUnitPage()
 {
-  if(GetLastMode() != MANUALMODE)
-  {
-    eeprom.write(WEIGHTMODE, LASTMODE_ADD_EEPROM);
-  }
   int posx = 35;
   int posy = 15;
   ssd1306_clearScreen();
@@ -73,6 +69,10 @@ void WeightUnitPage()
 
 void WeightPage()
 {
+  if(GetLastMode() != WEIGHTMODE)
+  {
+    eeprom.write(WEIGHTMODE, LASTMODE_ADD_EEPROM);
+  }
   int posx = 55;
   int posy = 15;
   const char *charUnit;
@@ -90,6 +90,7 @@ void WeightPage()
     if(WeightUnit == N){charUnit = "N";}
     if(WeightUnit == DN){charUnit = "dN";}
     if(WeightUnit == POUND){charUnit = "lb";}
+    if(WeightUnit == OUNCE){charUnit = "oz";}
     
     ssd1306_printFixed(posx+30, HEIGHTOLED-posy+14, charUnit, STYLE_NORMAL);
     
@@ -320,7 +321,7 @@ void DoLastMode()
   }
   else if (GetLastMode() == WEIGHTMODE)
   {
-    
+    WeightPage();
   }
 }
 

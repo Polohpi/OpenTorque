@@ -14,7 +14,7 @@ void Measure()
     {
       valmeasure =i;
     }
-    if(valmeasure<75)
+    if(valmeasure<40)
     {
       valmeasure = 0;
     }
