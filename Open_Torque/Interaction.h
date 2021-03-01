@@ -7,7 +7,10 @@ void buttonUP()
 {
   if(millis() > millisButton + DELAYBUTTON)
   {
+    if(buttonUPstate == false)
+    {
     buttonUPstate = true;
+    }
     #ifdef DEBUGOT
     Serial.println("ButtonUP");
     #endif
@@ -19,7 +22,10 @@ void buttonDOWN()
 { 
   if(millis() > millisButton + DELAYBUTTON)
   {
+    if(buttonDOWNstate == false)
+    {
     buttonDOWNstate = true;
+    }
     #ifdef DEBUGOT
     Serial.println("ButtonDOWN");
     #endif
@@ -31,7 +37,10 @@ void buttonENTER()
 {
   if(millis() > millisButton + DELAYBUTTON)
   {
+    if(buttonENTERstate == false)
+    {
     buttonENTERstate = true;
+    }
     #ifdef DEBUGOT
     Serial.println("ButtonENTER");
     #endif

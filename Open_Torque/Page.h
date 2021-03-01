@@ -16,6 +16,8 @@ void WeightUnitPage()
   int posy = 15;
   ssd1306_clearScreen();
   boolean resume = false;
+
+  Serial.println("WeightUnitPage");
   
   while(resume == false)
   {
@@ -36,8 +38,9 @@ void WeightUnitPage()
         buttonUPstate = false;
         if(WeightUnit < 5)
         {
-        ssd1306_clearScreen();
-        WeightUnit++;
+          Serial.println("UP");
+          ssd1306_clearScreen();
+          WeightUnit++;
         }
       }
             
@@ -47,6 +50,7 @@ void WeightUnitPage()
         buttonDOWNstate = false;
         if(WeightUnit > 0)
         {
+          Serial.println("DOWN");
           ssd1306_clearScreen();
           WeightUnit--;
         }
@@ -56,6 +60,7 @@ void WeightUnitPage()
       { 
         millisButton = millis();
         buttonENTERstate = false;
+        Serial.println("ENTER");
         eeprom.write(WeightUnit, WEIGHTUNIT_ADD_EEPROM);
         SetUnit();
         UnitMenuSelectionState = true;
@@ -181,7 +186,8 @@ void LeverPage()
   int posy = 25;
   ssd1306_clearScreen();
   char s[10];
-  while(1)
+  boolean resume = false;
+  while(resume == false)
   {
     ssd1306_setFixedFont(ssd1306xled_font8x16);
     sprintf(s, "%d", lever);
@@ -215,14 +221,12 @@ void LeverPage()
         buttonENTERstate = false;
         
         eeprom.write(lever/10, LEVER_ADD_EEPROM);
-        //eeprom.write(200, LEVER_ADD_EEPROM);
         SettingMenuSelectionState = true;
-        goto labelMenu;
+        resume = true;
       }
 
     yield();
   }
-  labelMenu:
   yield();
 }
 
