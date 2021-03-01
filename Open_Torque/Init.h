@@ -22,7 +22,7 @@
 #define TARGET_ADD_EEPROM 0
 #define LASTMODE_ADD_EEPROM 1
 #define WEIGHTUNIT_ADD_EEPROM 2
-#define LONGUNIT_ADD_EEPROM 3
+#define LengthUNIT_ADD_EEPROM 3
 #define LEVER_ADD_EEPROM 4
 
 #define MANUALMODE 0
@@ -44,6 +44,9 @@
 #define INCH 3
 #define FEET 4
 
+#define HX711SCK 2
+#define HX711DOUT 3
+
 
 //#define DEBUGOT
 
@@ -59,10 +62,10 @@ int target;
 int LastMode;
 
 int WeightUnit;
-int LongUnit;
+int LengthUnit;
 const char *Unit;
 float WeightRatio;
-float LongRatio;
+float LengthRatio;
 
 unsigned long prevbuzzmillis = 0;
 
@@ -76,7 +79,7 @@ boolean hec = false;
 
 boolean PauseAcceuil = false;
 
-#define DELAYMEASURE 50
+#define DELAYMEASURE 100
 
 boolean buttonUPstate = false;
 boolean buttonDOWNstate = false;
@@ -125,7 +128,7 @@ const char *UnitItems[] =
 {
     "Back",
     "Weight",
-    "Long",
+    "Length",
 };
 
 const char *ScrewItems[] =

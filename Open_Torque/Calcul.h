@@ -9,7 +9,7 @@ void Measure()
 {
   if(millis() > millisMeasure + DELAYMEASURE)
   {
-    float i = loadcell.read();
+    float i = LoadCellRead();
     if(i<40000)
     {
       valmeasure =i;
@@ -20,11 +20,11 @@ void Measure()
     }
     millisMeasure = millis();
   }
-  Torque = (valmeasure*WeightRatio)*(lever/LongRatio);
-  #ifdef DEBUGOT
-  Serial.println("valmeasure : " + (String)valmeasure);
-  Serial.println("Torque : " + (String)Torque);
-  #endif  
+  Torque = (valmeasure*WeightRatio)*(lever/LengthRatio);
+  //#ifdef DEBUGOT
+//  Serial.println("valmeasure : " + (String)valmeasure);
+//  Serial.println("Torque : " + (String)Torque);
+  //#endif  
   yield();
 }
 
@@ -240,6 +240,7 @@ void UnitMenuSelection()
 {
   if(UnitMenuSelectionState == true)
   {
+    UnitMenuSelectionState = false;
     ssd1306_clearScreen();
     boolean resume = false;
     while(resume == false)
@@ -265,7 +266,7 @@ void UnitMenuSelection()
         if(ssd1306_menuSelection(&UnitMenu) == 2)
         {
           ssd1306_clearScreen();
-          LongPage();
+          LengthPage();
           resume = true;
         }
       }
@@ -286,7 +287,6 @@ void UnitMenuSelection()
       yield();
     }
   }
-  UnitMenuSelectionState = false;
   yield();
 }
 
@@ -376,7 +376,7 @@ void MainMenuSelection()
         {
           ssd1306_clearScreen();
           millisTare = millis();
-          Tare();
+          LoadCellTare();
           goto labelMenu;
         }
         if(ssd1306_menuSelection(&MainMenu) == 2)

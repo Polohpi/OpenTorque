@@ -1,14 +1,31 @@
-#include "Page.h"
-#include "Tool.h"
 #include "Init.h"
+#include "Page.h"
 #include "Calcul.h"
+#include "Tool.h"
 #include "Interaction.h"
 
 void setup() {
 
   Serial.begin(9600);
-  loadcell.setup(-41.5);
-  loadcell.tare();
+  LoadCell.begin();
+  
+  unsigned long stabilizingtime = 2000; // preciscion right after power-up can be improved by adding a few seconds of stabilizing time
+  boolean _tare = true; //set this to false if you don't want tare to be performed in the next step
+  
+  LoadCell.start(stabilizingtime, _tare);
+  
+  if (LoadCell.getTareTimeoutFlag() || LoadCell.getSignalTimeoutFlag()) {
+    Serial.println("Timeout, check MCU>HX711 wiring and pin designations");
+    while (1);
+  }
+  else
+  {
+    LoadCell.setCalFactor(-43.49); // user set calibration value (float), initial value 1.0 may be used for this sketch
+    Serial.println("Startup is complete");
+  }
+  while (!LoadCell.update());
+  LoadCell.tare();
+  
   ssd1306_128x64_i2c_init();
   Scheduler.startLoop(Measure);
   Scheduler.startLoop(WatchTargetBuzz);
@@ -39,7 +56,7 @@ void setup() {
   target = eeprom.read(TARGET_ADD_EEPROM);
   LastMode = eeprom.read(LASTMODE_ADD_EEPROM);
   WeightUnit = eeprom.read(WEIGHTUNIT_ADD_EEPROM);
-  LongUnit = eeprom.read(LONGUNIT_ADD_EEPROM);
+  LengthUnit = eeprom.read(LengthUNIT_ADD_EEPROM);
   lever = eeprom.read(LEVER_ADD_EEPROM)*10;
 
   SetUnit();

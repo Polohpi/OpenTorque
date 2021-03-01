@@ -2,15 +2,16 @@
 #define TOOL_h
 
 #include "Init.h"
-#include <HX711.h>
+#include <HX711_ADC.h>
 #include "ssd1306.h"
 #include <Scheduler.h>
 #include <Buzzer.h>
 #include "AT24C256.h"
 
 AT24C256 eeprom = AT24C256();
-HX711 loadcell = HX711();
-Buzzer buzzer(9);
+HX711_ADC LoadCell(HX711SCK, HX711DOUT);
+Buzzer buzzer(BUZZ);
+
 SAppMenu MainMenu;
 SAppMenu ModeMenu;
 SAppMenu SettingMenu;
@@ -41,11 +42,10 @@ void printval(int x, int y, int value)
   yield();
 }
 
-void Tare()
+void LoadCellTare()
 {
   ssd1306_clearScreen();
-  loadcell.tare();
-  
+  LoadCell.tareNoDelay();
   while(millis() < millisTare + DELAYTARE)
   {
     ssd1306_setFixedFont(ssd1306xled_font8x16);
@@ -58,7 +58,7 @@ void Tare()
   yield();
 }
 
-void Calibrate(float i)
+void LoadCellCalibrate(float i)
 {
   ssd1306_clearScreen();
   
@@ -66,10 +66,10 @@ void Calibrate(float i)
   {
     ssd1306_setFixedFont(ssd1306xled_font8x16);
     ssd1306_printFixed(25, 30, "CAL OK !", STYLE_BOLD);
-    loadcell.Calibrate(i);
+    LoadCell.refreshDataSet();
+    LoadCell.setCalFactor(LoadCell.getNewCalibration(i));
     yield();
   }
-  ssd1306_clearScreen();
   SettingMenuSelectionState = true;
   
   yield();
@@ -81,68 +81,90 @@ void SetUnit()
   {
     WeightRatio = 1;
     
-    if(LongUnit == CM){Unit = "g/cm";LongRatio = 10;}
-    if(LongUnit == DM){Unit = "g/dm";LongRatio = 100;}
-    if(LongUnit == M){Unit = "g/m";LongRatio = 1000;}
-    if(LongUnit == INCH){Unit = "g/in";LongRatio = 25.4;}
-    if(LongUnit == FEET){Unit = "g/ft";LongRatio = 304.8;}
+    if(LengthUnit == CM){Unit = "g/cm";LengthRatio = 10;}
+    if(LengthUnit == DM){Unit = "g/dm";LengthRatio = 100;}
+    if(LengthUnit == M){Unit = "g/m";LengthRatio = 1000;}
+    if(LengthUnit == INCH){Unit = "g/in";LengthRatio = 25.4;}
+    if(LengthUnit == FEET){Unit = "g/ft";LengthRatio = 304.8;}
   }
 
   if(WeightUnit == KG)
   {
     WeightRatio = 0.001;
-    if(LongUnit == CM){Unit = "Kg/cm";LongRatio = 10;}
-    if(LongUnit == DM){Unit = "Kg/dm";LongRatio = 100;}
-    if(LongUnit == M){Unit = "Kg/m";LongRatio = 1000;}
-    if(LongUnit == INCH){Unit = "Kg/in";LongRatio = 25.4;}
-    if(LongUnit == FEET){Unit = "Kg/ft";LongRatio = 304.8;}
+    if(LengthUnit == CM){Unit = "Kg/cm";LengthRatio = 10;}
+    if(LengthUnit == DM){Unit = "Kg/dm";LengthRatio = 100;}
+    if(LengthUnit == M){Unit = "Kg/m";LengthRatio = 1000;}
+    if(LengthUnit == INCH){Unit = "Kg/in";LengthRatio = 25.4;}
+    if(LengthUnit == FEET){Unit = "Kg/ft";LengthRatio = 304.8;}
   }
   
   if(WeightUnit == N)
   {
     WeightRatio = 0.00980665;
-    if(LongUnit == CM){Unit = "N/cm";LongRatio = 10;}
-    if(LongUnit == DM){Unit = "N/dm";LongRatio = 100;}
-    if(LongUnit == M){Unit = "N/m";LongRatio = 1000;}
-    if(LongUnit == INCH){Unit = "N/in";LongRatio = 25.4;}
-    if(LongUnit == FEET){Unit = "N/ft";LongRatio = 304.8;}
+    if(LengthUnit == CM){Unit = "N/cm";LengthRatio = 10;}
+    if(LengthUnit == DM){Unit = "N/dm";LengthRatio = 100;}
+    if(LengthUnit == M){Unit = "N/m";LengthRatio = 1000;}
+    if(LengthUnit == INCH){Unit = "N/in";LengthRatio = 25.4;}
+    if(LengthUnit == FEET){Unit = "N/ft";LengthRatio = 304.8;}
   }
 
   if(WeightUnit == DN)
   {
     WeightRatio = 0.0980665;
-    if(LongUnit == CM){Unit = "dN/cm";LongRatio = 10;}
-    if(LongUnit == DM){Unit = "dN/dm";LongRatio = 100;}
-    if(LongUnit == M){Unit = "dN/m";LongRatio = 1000;}
-    if(LongUnit == INCH){Unit = "dN/in";LongRatio = 25.4;}
-    if(LongUnit == FEET){Unit = "dN/ft";LongRatio = 304.8;}
+    if(LengthUnit == CM){Unit = "dN/cm";LengthRatio = 10;}
+    if(LengthUnit == DM){Unit = "dN/dm";LengthRatio = 100;}
+    if(LengthUnit == M){Unit = "dN/m";LengthRatio = 1000;}
+    if(LengthUnit == INCH){Unit = "dN/in";LengthRatio = 25.4;}
+    if(LengthUnit == FEET){Unit = "dN/ft";LengthRatio = 304.8;}
   }
 
   if(WeightUnit == POUND)
   {
     WeightRatio = 0.00220462;
-    if(LongUnit == CM){Unit = "lb/cm";LongRatio = 10;}
-    if(LongUnit == DM){Unit = "lb/dm";LongRatio = 100;}
-    if(LongUnit == M){Unit = "lb/m";LongRatio = 1000;}
-    if(LongUnit == INCH){Unit = "lb/in";LongRatio = 25.4;}
-    if(LongUnit == FEET){Unit = "lb/ft";LongRatio = 304.8;}
+    if(LengthUnit == CM){Unit = "lb/cm";LengthRatio = 10;}
+    if(LengthUnit == DM){Unit = "lb/dm";LengthRatio = 100;}
+    if(LengthUnit == M){Unit = "lb/m";LengthRatio = 1000;}
+    if(LengthUnit == INCH){Unit = "lb/in";LengthRatio = 25.4;}
+    if(LengthUnit == FEET){Unit = "lb/ft";LengthRatio = 304.8;}
   }
   
   if(WeightUnit == OUNCE)
   {
     WeightRatio = 0.035375;
-    if(LongUnit == CM){Unit = "oz/cm";LongRatio = 10;}
-    if(LongUnit == DM){Unit = "oz/dm";LongRatio = 100;}
-    if(LongUnit == M){Unit = "oz/m";LongRatio = 1000;}
-    if(LongUnit == INCH){Unit = "oz/in";LongRatio = 25.4;}
-    if(LongUnit == FEET){Unit = "oz/ft";LongRatio = 304.8;}
+    if(LengthUnit == CM){Unit = "oz/cm";LengthRatio = 10;}
+    if(LengthUnit == DM){Unit = "oz/dm";LengthRatio = 100;}
+    if(LengthUnit == M){Unit = "oz/m";LengthRatio = 1000;}
+    if(LengthUnit == INCH){Unit = "oz/in";LengthRatio = 25.4;}
+    if(LengthUnit == FEET){Unit = "oz/ft";LengthRatio = 304.8;}
   }
-  
    Serial.println("WeightUnit ; " + String(WeightUnit));
-   Serial.println("LongUnit ; " + String(LongUnit));
-   
-  Serial.println("SetUnit : " + String(Unit));
-  
+   Serial.println("LengthUnit ; " + String(LengthUnit));
+   Serial.println("SetUnit : " + String(Unit));
+   yield();
+
+}
+
+float LoadCellRead()
+{
+  static boolean newDataReady = 0;
+  const int serialPrintInterval = 0; //increase value to slow down serial print activity
+
+  // check for new data/start next conversion:
+  if (LoadCell.update()) newDataReady = true;
+
+  // get smoothed value from the dataset:
+  if (newDataReady) 
+  {
+    unsigned long t = 0;
+    float i;
+    if (millis() > t + serialPrintInterval) {
+      i = LoadCell.getData();
+      newDataReady = 0;
+      t = millis();
+    }
+
+    return i;
+  }
 }
 
 void GetUnity()

@@ -15,8 +15,9 @@ void WeightUnitPage()
   int posx = 35;
   int posy = 15;
   ssd1306_clearScreen();
-
-  while(1)
+  boolean resume = false;
+  
+  while(resume == false)
   {
     ssd1306_setFixedFont(ssd1306xled_font8x16);
     const char *charUnit;
@@ -58,12 +59,10 @@ void WeightUnitPage()
         eeprom.write(WeightUnit, WEIGHTUNIT_ADD_EEPROM);
         SetUnit();
         UnitMenuSelectionState = true;
-        goto labelMenu;
+        resume = true;
       }
-
     yield();
   }
-  labelMenu:
   yield();
 }
 
@@ -76,10 +75,11 @@ void ScalePage()
   int posx = 55;
   int posy = 15;
   const char *charUnit;
-  ssd1306_clearScreen();
+  ssd1306_clearScreen(); 
 
+  boolean resume = false;
 
-  while(1)
+  while(resume == false)
   {
     ssd1306_setFixedFont(comic_sans_font24x32_123);
     printval(posx, posy, valmeasure*WeightRatio);
@@ -101,12 +101,11 @@ void ScalePage()
       millisButton = millis();
       buttonENTERstate = false;
       MainMenuSelectionState = true;
-      goto labelMenu;
+      resume = true;
     }
 
     yield();
   }
-  labelMenu:
   yield();
 }
 
@@ -119,13 +118,13 @@ void ManualPage()
   int posx = 55;
   int posy = 15;
   ssd1306_clearScreen();
-  Serial.println(String(Unit));
   
   #ifdef DEBUGOT
   Serial.println("Manual");
   #endif
-  
-  while(1)
+
+  boolean resume = false;
+  while(resume == false)
   {
     ssd1306_setFixedFont(ssd1306xled_font8x16);
     ssd1306_printFixed(posx+30, HEIGHTOLED-posy+14, Unit, STYLE_NORMAL);
@@ -161,7 +160,8 @@ void ManualPage()
         buttonENTERstate = false;
         
         MainMenuSelectionState = true;
-        goto labelMenu;
+        resume = true;
+        //goto labelMenu;
       }
     }
     else
@@ -171,7 +171,7 @@ void ManualPage()
     }
     yield();
   }
-  labelMenu:
+  //labelMenu:
   yield();
 }
 
@@ -286,7 +286,8 @@ void CalibrationPage()
         millisButton = millis();
         buttonENTERstate = false;
         millisCalibration = millis();
-        Calibrate(float(Calibrationtarget));
+        LoadCellCalibrate((float)Calibrationtarget);
+        
         resume = false;
       }
     }  
@@ -301,7 +302,7 @@ void AngularPage()
   
 }
 
-void LongPage()
+void LengthPage()
 {
   int posx = 25;
   int posy = 25;
@@ -311,11 +312,11 @@ void LongPage()
   {
     ssd1306_setFixedFont(ssd1306xled_font8x16);
     const char *charUnit;
-    if(LongUnit == CM){charUnit = "centimeter";}
-    if(LongUnit == DM){charUnit = "decimeter";}
-    if(LongUnit == M){charUnit = "meter";}
-    if(LongUnit == INCH){charUnit = "inch";}
-    if(LongUnit == FEET){charUnit = "Feet";}
+    if(LengthUnit == CM){charUnit = "centimeter";}
+    if(LengthUnit == DM){charUnit = "decimeter";}
+    if(LengthUnit == M){charUnit = "meter";}
+    if(LengthUnit == INCH){charUnit = "inch";}
+    if(LengthUnit == FEET){charUnit = "Feet";}
     
     ssd1306_printFixed(posx+30, HEIGHTOLED-posy+14, charUnit, STYLE_NORMAL);
     
@@ -323,10 +324,10 @@ void LongPage()
       {
         millisButton = millis();
         buttonUPstate = false;
-        if(LongUnit < 4)
+        if(LengthUnit < 4)
         {
         ssd1306_clearScreen();
-        LongUnit++;
+        LengthUnit++;
         }
       }
             
@@ -334,10 +335,10 @@ void LongPage()
       {
         millisButton = millis();
         buttonDOWNstate = false;
-        if(LongUnit > 0)
+        if(LengthUnit > 0)
         {
           ssd1306_clearScreen();
-          LongUnit--;
+          LengthUnit--;
         }
       }
       
@@ -346,7 +347,7 @@ void LongPage()
         millisButton = millis();
         buttonENTERstate = false;
         
-        eeprom.write(LongUnit, LONGUNIT_ADD_EEPROM);
+        eeprom.write(LengthUnit, LengthUNIT_ADD_EEPROM);
         SetUnit();
         UnitMenuSelectionState = true;
         goto labelMenu;
