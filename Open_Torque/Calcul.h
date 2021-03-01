@@ -67,8 +67,10 @@ void ScrewMenuSelection()
 {
   if(ScrewMenuSelectionState == true)
   {
+    ScrewMenuSelectionState = false;
     ssd1306_clearScreen();
-    while(1)
+    boolean resume = false;
+    while(resume == false)
     {
       ssd1306_setFixedFont(ssd1306xled_font8x16);
       ssd1306_showMenu( &TorqueMenu );
@@ -82,22 +84,19 @@ void ScrewMenuSelection()
         {
           ssd1306_clearScreen();
           TorqueMenuSelectionState = true;
-          ScrewMenuSelectionState = false;
-          goto labelMenu;
+          resume = true; 
         }
         if(ssd1306_menuSelection(&ScrewMenu) == 1)
         {
           ssd1306_clearScreen();
-          TorqueMenuSelectionState = false;
           ManualPage();
-          goto labelMenu;
+          resume = true;
         }
         if(ssd1306_menuSelection(&ScrewMenu) == 2)
         {
           ssd1306_clearScreen();
-          TorqueMenuSelectionState = false;
           USPage();
-          goto labelMenu; 
+          resume = true;
         }
       }
       if(buttonDOWNstate == true)
@@ -117,7 +116,6 @@ void ScrewMenuSelection()
       yield();
     }
   }
-  labelMenu:
   yield();
 }
 
@@ -125,8 +123,10 @@ void TorqueMenuSelection()
 {
   if(TorqueMenuSelectionState == true)
   {
+    TorqueMenuSelectionState = false;
     ssd1306_clearScreen();
-    while(1)
+    boolean resume = false;
+    while(resume == false)
     {
       ssd1306_setFixedFont(ssd1306xled_font8x16);
       //ssd1306_setFixedFont(ssd1306xled_font6x8);
@@ -139,23 +139,20 @@ void TorqueMenuSelection()
         if(ssd1306_menuSelection(&TorqueMenu) == 0)
         {
           ssd1306_clearScreen();
-          TorqueMenuSelectionState = false;
           ModeMenuSelectionState = true ;
-          goto labelMenu;
+          resume = true;
         }
         if(ssd1306_menuSelection(&TorqueMenu) == 1)
         {
           ssd1306_clearScreen();
-          TorqueMenuSelectionState = false;
           ManualPage();
-          goto labelMenu;
+          resume = true;
         }
         if(ssd1306_menuSelection(&TorqueMenu) == 2)
         {
           ssd1306_clearScreen();
-          TorqueMenuSelectionState = false;
           ScrewMenuSelectionState = true;
-          goto labelMenu;
+          resume = true;
         }
       }
       if(buttonDOWNstate == true)
@@ -175,7 +172,6 @@ void TorqueMenuSelection()
       yield();
     }
   }
-  labelMenu:
   yield();
 }
 
@@ -183,8 +179,10 @@ void ModeMenuSelection()
 {
   if(ModeMenuSelectionState == true)
   {
+    ModeMenuSelectionState = false;
     ssd1306_clearScreen();
-    while(1)
+    boolean resume = false;
+    while(resume == false)
     {
       ssd1306_setFixedFont(ssd1306xled_font8x16);
       ssd1306_showMenu( &ModeMenu );
@@ -196,30 +194,26 @@ void ModeMenuSelection()
         if(ssd1306_menuSelection(&ModeMenu) == 0)
         {
           ssd1306_clearScreen();
-          ModeMenuSelectionState = false;
           MainMenuSelectionState = true;
-          goto labelMenu;
+          resume = true;
         }
         if(ssd1306_menuSelection(&ModeMenu) == 1)
         {
           ssd1306_clearScreen();
-          ModeMenuSelectionState = false;
           TorqueMenuSelectionState = true;
-          goto labelMenu;
+          resume = true;
         }
         if(ssd1306_menuSelection(&ModeMenu) == 2)
         {
           ssd1306_clearScreen();
-          ModeMenuSelectionState = false;
           AngularPage();
-          goto labelMenu;
+          resume = true;
         }
         if(ssd1306_menuSelection(&ModeMenu) == 3)
         {
           ssd1306_clearScreen();
-          ModeMenuSelectionState = false;
-          WeightPage();
-          goto labelMenu;
+          ScalePage();
+          resume = true;
         }
       }
       if(buttonDOWNstate == true)
@@ -239,7 +233,6 @@ void ModeMenuSelection()
       yield();
     }
   }
-  labelMenu:
   yield();
 }
 
@@ -248,7 +241,8 @@ void UnitMenuSelection()
   if(UnitMenuSelectionState == true)
   {
     ssd1306_clearScreen();
-    while(1)
+    boolean resume = false;
+    while(resume == false)
     {
       ssd1306_setFixedFont(ssd1306xled_font8x16);
       ssd1306_showMenu( &UnitMenu );
@@ -259,23 +253,20 @@ void UnitMenuSelection()
         if(ssd1306_menuSelection(&UnitMenu) == 0)
         {
           ssd1306_clearScreen();
-          UnitMenuSelectionState = false;
           SettingMenuSelectionState = true;
-          goto labelMenu;
+          resume = true;
         }
         if(ssd1306_menuSelection(&UnitMenu) == 1)
         {
           ssd1306_clearScreen();
-          UnitMenuSelectionState = false;
           WeightUnitPage();
-          goto labelMenu;
+          resume = true;
         }
         if(ssd1306_menuSelection(&UnitMenu) == 2)
         {
           ssd1306_clearScreen();
-          UnitMenuSelectionState = false;
           LongPage();
-          goto labelMenu;
+          resume = true;
         }
       }
       if(buttonDOWNstate == true)
@@ -295,7 +286,7 @@ void UnitMenuSelection()
       yield();
     }
   }
-  labelMenu:
+  UnitMenuSelectionState = false;
   yield();
 }
 
@@ -303,8 +294,11 @@ void SettingMenuSelection()
 {
   if(SettingMenuSelectionState == true)
   {
+    SettingMenuSelectionState = false;
     ssd1306_clearScreen();
-    while(1)
+    boolean resume = false;
+    
+    while(resume == false)
     {
       ssd1306_setFixedFont(ssd1306xled_font8x16);
       ssd1306_showMenu( &SettingMenu );
@@ -315,30 +309,26 @@ void SettingMenuSelection()
         if(ssd1306_menuSelection(&SettingMenu) == 0)
         {
           ssd1306_clearScreen();
-          SettingMenuSelectionState = false;
           MainMenuSelectionState = true;
-          goto labelMenu;
+          resume = true;
         }
         if(ssd1306_menuSelection(&SettingMenu) == 1)
         {
           ssd1306_clearScreen();
-          SettingMenuSelectionState = false;
           LeverPage();
-          goto labelMenu;
+          resume = true;
         }
         if(ssd1306_menuSelection(&SettingMenu) == 2)
         {
           ssd1306_clearScreen();
-          SettingMenuSelectionState = false; 
           UnitMenuSelectionState = true;
-          goto labelMenu;
+          resume = true;
         }
         if(ssd1306_menuSelection(&SettingMenu) == 3)
         {
           ssd1306_clearScreen();
-          SettingMenuSelectionState = false;
           CalibrationPage();
-          goto labelMenu;
+          resume = true;
         }
       }
       if(buttonDOWNstate == true)
@@ -358,7 +348,6 @@ void SettingMenuSelection()
       yield();
     }
   }
-  labelMenu:
   yield();
 }
 
@@ -369,6 +358,7 @@ void MainMenuSelection()
     ssd1306_clearScreen();
     while(1)
     {
+      MainMenuSelectionState = false;
       ssd1306_setFixedFont(ssd1306xled_font8x16);
       ssd1306_showMenu( &MainMenu );
       if(buttonENTERstate ==true)
@@ -379,7 +369,6 @@ void MainMenuSelection()
         if(ssd1306_menuSelection(&MainMenu) == 0)
         {
           ssd1306_clearScreen();
-          MainMenuSelectionState = false;
           DoLastMode();
           goto labelMenu;
         }
@@ -387,21 +376,18 @@ void MainMenuSelection()
         {
           ssd1306_clearScreen();
           millisTare = millis();
-          MainMenuSelectionState = false;
           Tare();
           goto labelMenu;
         }
         if(ssd1306_menuSelection(&MainMenu) == 2)
         {
           ssd1306_clearScreen();
-          MainMenuSelectionState = false;
           ModeMenuSelectionState = true;
           goto labelMenu;
         }
         if(ssd1306_menuSelection(&MainMenu) == 3)
         {
           ssd1306_clearScreen();
-          MainMenuSelectionState = false;
           SettingMenuSelectionState = true;
           goto labelMenu;
         }

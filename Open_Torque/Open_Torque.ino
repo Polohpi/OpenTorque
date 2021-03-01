@@ -7,7 +7,7 @@
 void setup() {
 
   Serial.begin(9600);
-  loadcell.setup();
+  loadcell.setup(-41.5);
   loadcell.tare();
   ssd1306_128x64_i2c_init();
   Scheduler.startLoop(Measure);

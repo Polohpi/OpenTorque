@@ -67,11 +67,11 @@ void WeightUnitPage()
   yield();
 }
 
-void WeightPage()
+void ScalePage()
 {
-  if(GetLastMode() != WEIGHTMODE)
+  if(GetLastMode() != SCALEMODE)
   {
-    eeprom.write(WEIGHTMODE, LASTMODE_ADD_EEPROM);
+    eeprom.write(SCALEMODE, LASTMODE_ADD_EEPROM);
   }
   int posx = 55;
   int posy = 15;
@@ -84,6 +84,7 @@ void WeightPage()
     ssd1306_setFixedFont(comic_sans_font24x32_123);
     printval(posx, posy, valmeasure*WeightRatio);
     ssd1306_setFixedFont(ssd1306xled_font8x16);
+    ssd1306_printFixed(0, 0, "Scale", STYLE_NORMAL);
     
     if(WeightUnit == G){charUnit = "g";}
     if(WeightUnit == KG){charUnit = "Kg";}
@@ -95,13 +96,13 @@ void WeightPage()
     ssd1306_printFixed(posx+30, HEIGHTOLED-posy+14, charUnit, STYLE_NORMAL);
     
       
-      if(buttonENTERstate == true)
-      { 
-        millisButton = millis();
-        buttonENTERstate = false;
-        MainMenuSelectionState = true;
-        goto labelMenu;
-      }
+    if(buttonENTERstate == true)
+    { 
+      millisButton = millis();
+      buttonENTERstate = false;
+      MainMenuSelectionState = true;
+      goto labelMenu;
+    }
 
     yield();
   }
@@ -128,6 +129,7 @@ void ManualPage()
   {
     ssd1306_setFixedFont(ssd1306xled_font8x16);
     ssd1306_printFixed(posx+30, HEIGHTOLED-posy+14, Unit, STYLE_NORMAL);
+    ssd1306_printFixed(0, 0, "ManualT", STYLE_NORMAL);
     
     if(valmeasure<200)
     {
@@ -226,7 +228,72 @@ void LeverPage()
 
 void CalibrationPage()
 {
+  int posx = 55;
+  int posy = 15;
+  int Calibrationtarget = 170;
+  const char *charUnit;
+  ssd1306_clearScreen();
+  boolean resume = true;
   
+  while(resume == true)
+  {
+    if(WeightUnit == G){charUnit = "g";}
+    if(WeightUnit == KG){charUnit = "Kg";}
+    if(WeightUnit == N){charUnit = "N";}
+    if(WeightUnit == DN){charUnit = "dN";}
+    if(WeightUnit == POUND){charUnit = "lb";}
+    if(WeightUnit == OUNCE){charUnit = "oz";}
+    ssd1306_setFixedFont(ssd1306xled_font8x16);
+    ssd1306_printFixed(posx+30, HEIGHTOLED-posy+14, charUnit, STYLE_NORMAL);
+    ssd1306_printFixed(0, 0, "Calibrattion", STYLE_NORMAL);
+    
+    if(valmeasure<50)
+    {
+      ssd1306_setFixedFont(comic_sans_font24x32_123);
+      printval(posx, posy, Calibrationtarget);
+      
+      if(buttonUPstate == true) 
+      {
+        millisButton = millis();
+        buttonUPstate = false;
+        Calibrationtarget += 10;
+      }
+            
+      if(buttonDOWNstate == true)
+      {
+        millisButton = millis();
+        buttonDOWNstate = false;
+        if(target > TORQUEMIN)
+        {
+          Calibrationtarget -= 10;
+        }
+      }
+      
+      if(buttonENTERstate == true)
+      {
+        millisButton = millis();
+        buttonENTERstate = false;
+        resume = false; 
+      }
+    }
+    else
+    {
+      ssd1306_setFixedFont(comic_sans_font24x32_123);
+      printval(posx, posy, valmeasure*WeightRatio);
+      
+      if(buttonENTERstate == true)
+      {
+        millisButton = millis();
+        buttonENTERstate = false;
+        millisCalibration = millis();
+        Calibrate(float(Calibrationtarget));
+        resume = false;
+      }
+    }  
+    yield();
+  }
+  SettingMenuSelectionState = true;
+  yield();
 }
 
 void AngularPage()
@@ -319,9 +386,9 @@ void DoLastMode()
   {
     
   }
-  else if (GetLastMode() == WEIGHTMODE)
+  else if (GetLastMode() == SCALEMODE)
   {
-    WeightPage();
+    ScalePage();
   }
 }
 

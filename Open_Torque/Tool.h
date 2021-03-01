@@ -44,15 +44,33 @@ void printval(int x, int y, int value)
 void Tare()
 {
   ssd1306_clearScreen();
+  loadcell.tare();
   
   while(millis() < millisTare + DELAYTARE)
   {
-  loadcell.tare();
-  ssd1306_setFixedFont(ssd1306xled_font8x16);
-  ssd1306_printFixed(25, 30, "TARE OK !", STYLE_BOLD);
+    ssd1306_setFixedFont(ssd1306xled_font8x16);
+    ssd1306_printFixed(25, 30, "TARE OK !", STYLE_BOLD);
+    yield();
   }
   ssd1306_clearScreen();
   MainMenuSelectionState = true;
+  
+  yield();
+}
+
+void Calibrate(float i)
+{
+  ssd1306_clearScreen();
+  
+  while(millis() < millisCalibration + DELAYCALIBRATION)
+  {
+    ssd1306_setFixedFont(ssd1306xled_font8x16);
+    ssd1306_printFixed(25, 30, "CAL OK !", STYLE_BOLD);
+    loadcell.Calibrate(i);
+    yield();
+  }
+  ssd1306_clearScreen();
+  SettingMenuSelectionState = true;
   
   yield();
 }

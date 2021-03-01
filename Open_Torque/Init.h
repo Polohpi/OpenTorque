@@ -14,6 +14,7 @@
 #define BUTTONDOWN 7
 #define DELAYBUTTON 100
 #define DELAYTARE 2000
+#define DELAYCALIBRATION 2000
 #define TORQUEMIN 2
 #define LEVERMAX 1500
 #define LEVERMIN 200
@@ -28,7 +29,7 @@
 #define METRICMODE 1
 #define USMODE 2
 #define ANGULARMODE 3
-#define WEIGHTMODE 4
+#define SCALEMODE 4
 
 #define G 0
 #define KG 1
@@ -68,6 +69,7 @@ unsigned long prevbuzzmillis = 0;
 unsigned long millisMeasure = 0;
 unsigned long millisButton = 0;
 unsigned long millisTare = 0;
+unsigned long millisCalibration = 0;
 
 boolean dec = false;
 boolean hec = false;
@@ -101,7 +103,7 @@ const char *ModeItems[] =
     "Back",
     "Torque",
     "Angular",
-    "Weight",
+    "Scale",
 };
 
 const char *SettingItems[] =
