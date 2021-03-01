@@ -22,8 +22,9 @@
 #define TARGET_ADD_EEPROM 0
 #define LASTMODE_ADD_EEPROM 1
 #define WEIGHTUNIT_ADD_EEPROM 2
-#define LengthUNIT_ADD_EEPROM 3
+#define LENGTHUNIT_ADD_EEPROM 3
 #define LEVER_ADD_EEPROM 4
+#define CALIBRATIONVALUE_ADD_EEPROM 10
 
 #define MANUALMODE 0
 #define METRICMODE 1
@@ -66,6 +67,7 @@ int LengthUnit;
 const char *Unit;
 float WeightRatio;
 float LengthRatio;
+double CalibrationVal;
 
 unsigned long prevbuzzmillis = 0;
 

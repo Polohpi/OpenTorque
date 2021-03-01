@@ -124,9 +124,8 @@ void ManualPage()
   int posy = 15;
   ssd1306_clearScreen();
   
-  #ifdef DEBUGOT
   Serial.println("Manual");
-  #endif
+  //Serial.println("Val : " + (String)EEPROMFloatRead());
 
   boolean resume = false;
   while(resume == false)
@@ -290,7 +289,7 @@ void CalibrationPage()
         millisButton = millis();
         buttonENTERstate = false;
         millisCalibration = millis();
-        LoadCellCalibrate((float)Calibrationtarget);
+        LoadCellCalibrate(Calibrationtarget);
         
         resume = false;
       }
@@ -351,7 +350,7 @@ void LengthPage()
         millisButton = millis();
         buttonENTERstate = false;
         
-        eeprom.write(LengthUnit, LengthUNIT_ADD_EEPROM);
+        eeprom.write(LengthUnit, LENGTHUNIT_ADD_EEPROM);
         SetUnit();
         UnitMenuSelectionState = true;
         goto labelMenu;

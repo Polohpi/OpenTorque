@@ -7,6 +7,7 @@
 #include <Scheduler.h>
 #include <Buzzer.h>
 #include "AT24C256.h"
+#include <Wire.h>
 
 AT24C256 eeprom = AT24C256();
 HX711_ADC LoadCell(HX711SCK, HX711DOUT);
@@ -18,6 +19,71 @@ SAppMenu SettingMenu;
 SAppMenu TorqueMenu;
 SAppMenu UnitMenu;
 SAppMenu ScrewMenu;
+
+void EEPROMFloatWrite(float Val)
+{
+  String valtxt = "";
+  valtxt =(String)Val;
+  
+  for(int i= CALIBRATIONVALUE_ADD_EEPROM; i<valtxt.length()+CALIBRATIONVALUE_ADD_EEPROM; i++)
+  {
+    Serial.println("valtxt[" + (String)i+ "] : " + (String)valtxt[i-CALIBRATIONVALUE_ADD_EEPROM]);
+    yield();
+  }
+
+  for(int i = CALIBRATIONVALUE_ADD_EEPROM; i<valtxt.length()+1+CALIBRATIONVALUE_ADD_EEPROM; i++)
+  {
+    if(i == CALIBRATIONVALUE_ADD_EEPROM)
+    {
+      if(Val<0)
+      {eeprom.write(0, i);}
+      else
+      {eeprom.write(1, i);}
+    }
+    else
+    {
+      if((String)valtxt[i-CALIBRATIONVALUE_ADD_EEPROM] == ".")
+        {eeprom.write(10, i);}
+      else 
+      {eeprom.write(valtxt[i-CALIBRATIONVALUE_ADD_EEPROM]-48, i);}
+    }
+    
+    if (i == valtxt.length()+CALIBRATIONVALUE_ADD_EEPROM)
+    {
+      eeprom.write(254, i);
+    }
+    yield();  
+  }
+}
+
+double EEPROMFloatRead()
+{
+  double valfloat;
+  boolean resume = false;
+  String val;
+  
+  while(resume == false)
+  {
+    if(eeprom.read(CALIBRATIONVALUE_ADD_EEPROM) == 0)
+    {
+      val += "-";
+    }
+    for(int i = CALIBRATIONVALUE_ADD_EEPROM + 1; eeprom.read(i) < 254;i++)
+    {
+      if(eeprom.read(i)==10)
+      {
+        val += ".";
+      }
+      else
+      {
+        val += String(eeprom.read(i));
+      }
+    }
+    resume = true;
+  }
+  valfloat = val.toFloat();
+  return valfloat;
+}
 
 void printval(int x, int y, int value)
 {
@@ -58,8 +124,11 @@ void LoadCellTare()
   yield();
 }
 
-void LoadCellCalibrate(float i)
+void LoadCellCalibrate(int Val)
 {
+
+  float i = (float)Val;
+  
   ssd1306_clearScreen();
   
   while(millis() < millisCalibration + DELAYCALIBRATION)
@@ -68,6 +137,7 @@ void LoadCellCalibrate(float i)
     ssd1306_printFixed(25, 30, "CAL OK !", STYLE_BOLD);
     LoadCell.refreshDataSet();
     LoadCell.setCalFactor(LoadCell.getNewCalibration(i));
+    //EEPROMFloatWrite((float)LoadCell.getNewCalibration(i));
     yield();
   }
   SettingMenuSelectionState = true;

@@ -18,11 +18,8 @@ void setup() {
     Serial.println("Timeout, check MCU>HX711 wiring and pin designations");
     while (1);
   }
-  else
-  {
-    LoadCell.setCalFactor(-43.49); // user set calibration value (float), initial value 1.0 may be used for this sketch
-    Serial.println("Startup is complete");
-  }
+  LoadCell.setCalFactor(1); // user set calibration value (float), initial value 1.0 may be used for this sketch
+  Serial.println("Startup is complete");
   while (!LoadCell.update());
   LoadCell.tare();
   
@@ -56,8 +53,9 @@ void setup() {
   target = eeprom.read(TARGET_ADD_EEPROM);
   LastMode = eeprom.read(LASTMODE_ADD_EEPROM);
   WeightUnit = eeprom.read(WEIGHTUNIT_ADD_EEPROM);
-  LengthUnit = eeprom.read(LengthUNIT_ADD_EEPROM);
+  LengthUnit = eeprom.read(LENGTHUNIT_ADD_EEPROM);
   lever = eeprom.read(LEVER_ADD_EEPROM)*10;
+  //CalibrationVal = EEPROMFloatRead();
 
   SetUnit();
   
@@ -67,6 +65,10 @@ void setup() {
   ssd1306_createMenu( &TorqueMenu, TorqueItems, sizeof(TorqueItems) / sizeof(char *) );
   ssd1306_createMenu( &UnitMenu, UnitItems, sizeof(UnitItems) / sizeof(char *) );
   ssd1306_createMenu( &ScrewMenu, ScrewItems, sizeof(ScrewItems) / sizeof(char *) );
+
+  LoadCell.setCalFactor(EEPROMFloatRead());
+  Serial.println("val : " + String(EEPROMFloatRead()));
+
 }
 
 void loop() {
