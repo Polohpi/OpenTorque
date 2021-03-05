@@ -24,6 +24,9 @@ void setup() {
   LoadCell.tare();
   
   ssd1306_128x64_i2c_init();
+
+  mpu6050.begin();
+  mpu6050.calcGyroOffsets();
   Scheduler.startLoop(Measure);
   Scheduler.startLoop(WatchTargetBuzz);
   
@@ -55,6 +58,7 @@ void setup() {
   WeightUnit = eeprom.read(WEIGHTUNIT_ADD_EEPROM);
   LengthUnit = eeprom.read(LENGTHUNIT_ADD_EEPROM);
   lever = eeprom.read(LEVER_ADD_EEPROM)*10;
+  AngularTarget = eeprom.read(ANGULARTARGET_ADD_EEPROM);
   //CalibrationVal = EEPROMFloatRead();
 
   SetUnit();

@@ -356,11 +356,14 @@ void MainMenuSelection()
   if(MainMenuSelectionState == true)
   {
     ssd1306_clearScreen();
-    while(1)
+    boolean resume = false;
+    
+    while(resume == false)
     {
       MainMenuSelectionState = false;
       ssd1306_setFixedFont(ssd1306xled_font8x16);
       ssd1306_showMenu( &MainMenu );
+      
       if(buttonENTERstate ==true)
       {
         millisButton = millis();
@@ -370,26 +373,28 @@ void MainMenuSelection()
         {
           ssd1306_clearScreen();
           DoLastMode();
-          goto labelMenu;
+          resume = true;
         }
         if(ssd1306_menuSelection(&MainMenu) == 1)
         {
           ssd1306_clearScreen();
+          AngularTare = mpu6050.getAngleZ();
           millisTare = millis();
           LoadCellTare();
-          goto labelMenu;
+          resume = true;
+          DoLastMode();
         }
         if(ssd1306_menuSelection(&MainMenu) == 2)
         {
           ssd1306_clearScreen();
           ModeMenuSelectionState = true;
-          goto labelMenu;
+          resume = true;
         }
         if(ssd1306_menuSelection(&MainMenu) == 3)
         {
           ssd1306_clearScreen();
           SettingMenuSelectionState = true;
-          goto labelMenu;
+          resume = true; 
         }
       }
       if(buttonDOWNstate == true)
@@ -409,7 +414,6 @@ void MainMenuSelection()
       yield();
     }
   }
-  labelMenu:
   yield();
 }
 

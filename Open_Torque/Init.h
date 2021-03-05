@@ -24,6 +24,7 @@
 #define WEIGHTUNIT_ADD_EEPROM 2
 #define LENGTHUNIT_ADD_EEPROM 3
 #define LEVER_ADD_EEPROM 4
+#define ANGULARTARGET_ADD_EEPROM 5
 #define CALIBRATIONVALUE_ADD_EEPROM 10
 
 #define MANUALMODE 0
@@ -31,6 +32,7 @@
 #define USMODE 2
 #define ANGULARMODE 3
 #define SCALEMODE 4
+#define ANGULARMODE 5
 
 #define G 0
 #define KG 1
@@ -60,6 +62,8 @@ float prctbuzz =0.75;
 
 int buzzstate = LOW;
 int target;
+int AngularTarget;
+int AngularTare = 0;;
 int LastMode;
 
 int WeightUnit;

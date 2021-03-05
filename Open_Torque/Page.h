@@ -302,7 +302,73 @@ void CalibrationPage()
 
 void AngularPage()
 {
+  if(GetLastMode() != ANGULARMODE)
+  {
+    eeprom.write(ANGULARMODE, LASTMODE_ADD_EEPROM);
+  }
   
+  int posx = 55;
+  int posy = 15;
+
+  int value;
+  boolean resume = false;
+  
+  while(resume == false)
+  {
+    value = sqrt(sq(mpu6050.getAngleZ() - AngularTare));
+    ssd1306_setFixedFont(ssd1306xled_font8x16);
+    ssd1306_printFixed(posx+30, HEIGHTOLED-posy+14, "deg", STYLE_NORMAL);
+    ssd1306_printFixed(0, 0, "Angular", STYLE_NORMAL);
+    
+    mpu6050.update();
+    
+    ssd1306_setFixedFont(comic_sans_font24x32_123);
+    
+    if(value < 2 )
+    {
+      printval(posx, posy, AngularTarget);
+    }
+    else
+    {
+      printval(posx, posy, value);
+    }
+
+    
+    if(buttonUPstate == true) 
+      {
+        millisButton = millis();
+        buttonUPstate = false;
+        if(AngularTarget < 360)
+        {
+          ssd1306_clearScreen();
+          AngularTarget += 5;
+          eeprom.write(AngularTarget, ANGULARTARGET_ADD_EEPROM);
+        }
+      }
+            
+      if(buttonDOWNstate == true)
+      {
+        millisButton = millis();
+        buttonDOWNstate = false;
+        if(AngularTarget > 0)
+        {
+          ssd1306_clearScreen();
+          AngularTarget -= 5;
+          eeprom.write(AngularTarget, ANGULARTARGET_ADD_EEPROM);
+        }
+      }
+      
+      if(buttonENTERstate == true)
+      { 
+        millisButton = millis();
+        buttonENTERstate = false;
+        MainMenuSelectionState = true;
+        resume = true;
+      }
+
+    yield();
+  }
+  yield();
 }
 
 void LengthPage()
@@ -311,7 +377,9 @@ void LengthPage()
   int posy = 25;
   ssd1306_clearScreen();
 
-  while(1)
+  boolean resume = false;
+
+  while(resume == false)
   {
     ssd1306_setFixedFont(ssd1306xled_font8x16);
     const char *charUnit;
@@ -353,12 +421,11 @@ void LengthPage()
         eeprom.write(LengthUnit, LENGTHUNIT_ADD_EEPROM);
         SetUnit();
         UnitMenuSelectionState = true;
-        goto labelMenu;
+        resume = true;
       }
 
     yield();
   }
-  labelMenu:
   yield();
 }
 
@@ -388,7 +455,7 @@ void DoLastMode()
   }
   else if (GetLastMode() == ANGULARMODE)
   {
-    
+    AngularPage();
   }
   else if (GetLastMode() == SCALEMODE)
   {

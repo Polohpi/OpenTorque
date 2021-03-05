@@ -2,16 +2,20 @@
 #define TOOL_h
 
 #include "Init.h"
+#include "Page.h"
 #include <HX711_ADC.h>
 #include "ssd1306.h"
 #include <Scheduler.h>
 #include <Buzzer.h>
 #include "AT24C256.h"
+#include <MPU6050_tockn.h>
 #include <Wire.h>
 
 AT24C256 eeprom = AT24C256();
 HX711_ADC LoadCell(HX711SCK, HX711DOUT);
 Buzzer buzzer(BUZZ);
+MPU6050 mpu6050(Wire);
+
 
 SAppMenu MainMenu;
 SAppMenu ModeMenu;
@@ -140,7 +144,6 @@ void LoadCellCalibrate(int Val)
     //EEPROMFloatWrite((float)LoadCell.getNewCalibration(i));
     yield();
   }
-  SettingMenuSelectionState = true;
   
   yield();
 }
@@ -237,8 +240,4 @@ float LoadCellRead()
   }
 }
 
-void GetUnity()
-{
-  
-}
 #endif
