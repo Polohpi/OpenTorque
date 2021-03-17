@@ -23,6 +23,7 @@ SAppMenu SettingMenu;
 SAppMenu TorqueMenu;
 SAppMenu UnitMenu;
 SAppMenu ScrewMenu;
+SAppMenu ImperialMenu;
 
 void EEPROMFloatWrite(float Val)
 {

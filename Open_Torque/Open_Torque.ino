@@ -14,7 +14,8 @@ void setup() {
   
   LoadCell.start(stabilizingtime, _tare);
   
-  if (LoadCell.getTareTimeoutFlag() || LoadCell.getSignalTimeoutFlag()) {
+  if (LoadCell.getTareTimeoutFlag() || LoadCell.getSignalTimeoutFlag()) 
+  {
     Serial.println("Timeout, check MCU>HX711 wiring and pin designations");
     while (1);
   }
@@ -36,6 +37,7 @@ void setup() {
   Scheduler.startLoop(ScrewMenuSelection);
   Scheduler.startLoop(SettingMenuSelection);
   Scheduler.startLoop(UnitMenuSelection);
+  Scheduler.startLoop(ImperialMenuSelection);
   
   #ifdef DEBUGOT
   Serial.println("Setup");
@@ -59,6 +61,11 @@ void setup() {
   LengthUnit = eeprom.read(LENGTHUNIT_ADD_EEPROM);
   lever = eeprom.read(LEVER_ADD_EEPROM)*10;
   AngularTarget = eeprom.read(ANGULARTARGET_ADD_EEPROM);
+  //ImperialGrade = eeprom.read(IMPERIALGRADE_ADD_EEPROM);
+  //ImperialSize = eeprom.read(IMPERIALSIZE_ADD_EEPROM);
+  //ImperialThread = eeprom.read(IMPERIALTHREAD_ADD_EEPROM);
+  //MetricGrade = eeprom.read(METRICGRADE_ADD_EEPROM);
+  //MetricSize = eeprom.read(METRICSIZE_ADD_EEPROM);
   //CalibrationVal = EEPROMFloatRead();
 
   SetUnit();
@@ -69,6 +76,7 @@ void setup() {
   ssd1306_createMenu( &TorqueMenu, TorqueItems, sizeof(TorqueItems) / sizeof(char *) );
   ssd1306_createMenu( &UnitMenu, UnitItems, sizeof(UnitItems) / sizeof(char *) );
   ssd1306_createMenu( &ScrewMenu, ScrewItems, sizeof(ScrewItems) / sizeof(char *) );
+  ssd1306_createMenu( &ImperialMenu, ImperialItems, sizeof(ImperialItems) / sizeof(char *) );
 
   LoadCell.setCalFactor(EEPROMFloatRead());
   Serial.println("val : " + String(EEPROMFloatRead()));

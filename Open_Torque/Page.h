@@ -429,14 +429,91 @@ void LengthPage()
   yield();
 }
 
-void USPage()
+void ImperialUNFPage()
+{
+  
+}
+
+void ImperialUNCPage()
 {
   
 }
 
 void MetricPage()
 {
+  if(GetLastMode() != METRICMODE)
+  {
+    eeprom.write(METRICMODE, LASTMODE_ADD_EEPROM);
+  }
   
+  int posx = 35;
+  int posy = 15;
+  ssd1306_clearScreen();
+  boolean resume = false;
+
+  eeprom.write(0, METRICSIZE_ADD_EEPROM);
+  eeprom.write(0, METRICGRADE_ADD_EEPROM);
+
+  Serial.println("MetricPage");
+  
+  while(resume == false)
+  {
+    //ssd1306_setFixedFont(ssd1306xled_font5x7_AB);
+    ussd1306_setFixedFont(ssd1306xled_font8x16);
+    const char *charUnit;
+    if(MetricSize == M4){charUnit = "M4";}
+    if(MetricSize == M5){charUnit = "M5";}
+    if(MetricSize == M6){charUnit = "M6";}
+    if(MetricSize == M8){charUnit = "M8";}
+    if(MetricSize == M10){charUnit = "M10";}
+    if(MetricSize == M12){charUnit = "M12";}
+    if(MetricSize == M14){charUnit = "M14";}
+    if(MetricSize == M16){charUnit = "M16";}
+    if(MetricSize == M18){charUnit = "M18";}
+    if(MetricSize == M20){charUnit = "M20";}
+    if(MetricSize == M22){charUnit = "M22";}
+    if(MetricSize == M24){charUnit = "M24";}
+    if(MetricSize == M27){charUnit = "M27";}
+
+    ssd1306_printFixed(posx+15, HEIGHTOLED-posy+14, charUnit, STYLE_NORMAL);
+    
+    if(buttonUPstate == true) 
+      {
+        millisButton = millis();
+        buttonUPstate = false;
+        if(MetricSize < 12)
+        {
+          Serial.println("UP");
+          ssd1306_clearScreen();
+          MetricSize++;
+          eeprom.write(MetricSize, METRICSIZE_ADD_EEPROM);
+        }
+      }
+            
+      if(buttonDOWNstate == true)
+      {
+        millisButton = millis();
+        buttonDOWNstate = false;
+        if(WeightUnit > 0)
+        {
+          Serial.println("DOWN");
+          ssd1306_clearScreen();
+          MetricSize--;
+          eeprom.write(MetricSize, METRICSIZE_ADD_EEPROM);
+        }
+      }
+      
+      if(buttonENTERstate == true)
+      { 
+        millisButton = millis();
+        buttonENTERstate = false;
+        Serial.println("ENTER");
+        MainMenuSelectionState = true;
+        resume = true;
+      }
+    yield();
+  }
+  yield();
 }
 
 void DoLastMode()
@@ -447,11 +524,15 @@ void DoLastMode()
   }
   else if (GetLastMode() == METRICMODE)
   {
-    
+    MetricPage();
   }
-  else if (GetLastMode() == USMODE)
+  else if (GetLastMode() == IMPERIALUNFMODE)
   {
-    
+    ImperialUNFPage();
+  }
+  else if (GetLastMode() == IMPERIALUNCMODE)
+  {
+    ImperialUNCPage();
   }
   else if (GetLastMode() == ANGULARMODE)
   {

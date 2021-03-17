@@ -63,6 +63,63 @@ void WatchTargetBuzz()
   yield();
 }
 
+void ImperialMenuSelection()
+{
+  if(ImperialMenuSelectionState == true)
+  {
+    ImperialMenuSelectionState = false;
+    ssd1306_clearScreen();
+    boolean resume = false; 
+    while(resume == false)
+    {
+      ssd1306_setFixedFont(ssd1306xled_font8x16);
+      ssd1306_showMenu( &ImperialMenu );
+      
+      if(buttonENTERstate == true)
+      {
+        millisButton = millis();
+        buttonENTERstate = false;
+        
+        if(ssd1306_menuSelection(&ImperialMenu) == 0)
+        {
+          ssd1306_clearScreen();
+          ScrewMenuSelectionState = true;
+          resume = true; 
+        }
+        if(ssd1306_menuSelection(&ImperialMenu) == 1)
+        {
+          ssd1306_clearScreen();
+          ImperialUNCPage();
+          resume = true;
+        }
+        if(ssd1306_menuSelection(&ImperialMenu) == 2)
+        {
+          ssd1306_clearScreen();
+          ImperialUNFPage();
+          resume = true;
+        }
+      }
+      
+      if(buttonDOWNstate == true)
+      {
+        millisButton = millis();
+        buttonDOWNstate = false;
+        ssd1306_menuDown(&ImperialMenu);
+        ssd1306_updateMenu(&ImperialMenu);
+      }
+      if(buttonUPstate == true)
+      {
+        millisButton = millis();
+        buttonUPstate = false;
+        ssd1306_menuUp(&ImperialMenu);
+        ssd1306_updateMenu(&ImperialMenu);
+      }
+      yield();
+    }
+  }
+  yield();
+}
+
 void ScrewMenuSelection()
 {
   if(ScrewMenuSelectionState == true)
@@ -70,10 +127,11 @@ void ScrewMenuSelection()
     ScrewMenuSelectionState = false;
     ssd1306_clearScreen();
     boolean resume = false;
+    
     while(resume == false)
     {
       ssd1306_setFixedFont(ssd1306xled_font8x16);
-      ssd1306_showMenu( &TorqueMenu );
+      ssd1306_showMenu( &ScrewMenu );
       
       if(buttonENTERstate == true)
       {
@@ -89,13 +147,13 @@ void ScrewMenuSelection()
         if(ssd1306_menuSelection(&ScrewMenu) == 1)
         {
           ssd1306_clearScreen();
-          ManualPage();
+          MetricPage();
           resume = true;
         }
         if(ssd1306_menuSelection(&ScrewMenu) == 2)
         {
           ssd1306_clearScreen();
-          USPage();
+          ImperialMenuSelectionState = true;
           resume = true;
         }
       }
@@ -324,7 +382,7 @@ void SettingMenuSelection()
           UnitMenuSelectionState = true;
           resume = true;
         }
-        if(ssd1306_menuSelection(&SettingMenu) == 3)
+        if(ssd1306_menuSelection(&SettingMenu) == 4)
         {
           ssd1306_clearScreen();
           CalibrationPage();

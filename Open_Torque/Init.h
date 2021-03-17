@@ -8,10 +8,13 @@
 #define DELAYBUZZON 0
 #define DELAYBUZZOFF 1000
 
+//define pins
 #define BUZZ 10
 #define BUTTONENTER 9
 #define BUTTONUP 8
 #define BUTTONDOWN 7
+
+//define delays
 #define DELAYBUTTON 150
 #define DELAYTARE 2000
 #define DELAYCALIBRATION 1000
@@ -19,20 +22,27 @@
 #define LEVERMAX 1500
 #define LEVERMIN 200
 
+//define EEPROM addresses 
 #define TARGET_ADD_EEPROM 0
 #define LASTMODE_ADD_EEPROM 1
 #define WEIGHTUNIT_ADD_EEPROM 2
 #define LENGTHUNIT_ADD_EEPROM 3
 #define LEVER_ADD_EEPROM 4
 #define ANGULARTARGET_ADD_EEPROM 5
-#define CALIBRATIONVALUE_ADD_EEPROM 10
+#define IMPERIALGRADE_ADD_EEPROM 6
+#define METRICGRADE_ADD_EEPROM 7
+#define IMPERIALSIZE_ADD_EEPROM 8
+#define METRICSIZE_ADD_EEPROM 9
+#define IMPERIALTHREAD_ADD_EEPROM 10
+#define CALIBRATIONVALUE_ADD_EEPROM 15
 
 #define MANUALMODE 0
 #define METRICMODE 1
-#define USMODE 2
-#define ANGULARMODE 3
-#define SCALEMODE 4
-#define ANGULARMODE 5
+#define IMPERIALUNFMODE 2
+#define IMPERIALUNCMODE 3
+#define ANGULARMODE 4
+#define SCALEMODE 5
+#define ANGULARMODE 6
 
 #define G 0
 #define KG 1
@@ -50,15 +60,16 @@
 #define HX711SCK 2
 #define HX711DOUT 3
 
-#define METRICROWS 13
-#define METRICCOLUMNS 7
+#define METRIC_ROWS 13
+#define METRIC_COLUMNS 7
 
-#define IMPERIALNCROWS 10
-#define IMPERIALNCCOLUMNS 10
+#define IMPERIAL_UNC_ROWS 10
+#define IMPERIAL_UNC_COLUMNS 10
 
-#define IMPERIALNFROWS 10
-#define IMPERIALNFCOLUMNS 9
+#define IMPERIAL_UNF_ROWS 10
+#define IMPERIAL_UNF_COLUMNS 9
 
+//define metric size 
 #define M4 0
 #define M5 1
 #define M6 2
@@ -73,23 +84,43 @@
 #define M24 11
 #define M27 12
 
-#define IMPERIAL1_4 0
-#define IMPERIAL5_16 1
-#define IMPERIAL3_8 2
-#define IMPERIAL7_16 3
-#define IMPERIAL1_2 4
-#define IMPERIAL9_16 5
-#define IMPERIAL5_8 6
-#define IMPERIAL3_4 7
-#define IMPERIAL7_8 8
-#define IMPERIAL1_0 9
+//define imperial size 
 
+#define IMPERIAL_1_4 0
+#define IMPERIAL_5_16 1
+#define IMPERIAL_3_8 2
+#define IMPERIAL_7_16 3
+#define IMPERIAL_1_2 4
+#define IMPERIAL_9_16 5
+#define IMPERIAL_5_8 6
+#define IMPERIAL_3_4 7
+#define IMPERIAL_7_8 8
+#define IMPERIAL_1_0 9
 
+//define imperial tread 
+#define UNF 0
+#define UNC 1
 
+//define imperial grade 
+#define G1 0
+#define G2 1
+#define G5 2
+#define G7 3
+#define G8 4
+#define A449 5
+#define A490 6
+#define A36 7
+#define G1045 8
+#define G4140 9
 
-
-
-//#define DEBUGOT
+//define metric grade
+#define METRIC_5_6 0
+#define METRIC_5_8 1
+#define METRIC_6_8 2
+#define METRIC_8_8 3
+#define METRIC_9_8 4
+#define METRIC_10_9 5
+#define METRIC_12_9 6
 
 float Torque = 0;
 float valmeasure = 0;
@@ -110,6 +141,12 @@ const char *Unit;
 float WeightRatio;
 float LengthRatio;
 double CalibrationVal;
+
+int ImperialThread;
+int ImperialSize;
+int ImperialGrade;
+int MetricSize;
+int MetricGrade;
 
 unsigned long prevbuzzmillis = 0;
 
@@ -136,10 +173,11 @@ boolean TorqueMenuSelectionState = false;
 boolean ScrewMenuSelectionState = false;
 boolean SettingMenuSelectionState = false;
 boolean UnitMenuSelectionState = false;
+boolean ImperialMenuSelectionState = false;
 
 const char *MainItems[] =
 {
-    "Exit",
+    "Back",
     "Tare",
     "Mode",
     "Setting",
@@ -158,6 +196,7 @@ const char *SettingItems[] =
     "Back",
     "Lever",
     "Unit",
+    "Screw Grade",
     "Calibration",
 };
 
@@ -179,7 +218,14 @@ const char *ScrewItems[] =
 {
     "Back",
     "Metric",
-    "US",
+    "Imperial",
+};
+
+const char *ImperialItems[] =
+{
+    "Back",
+    "UNC thread",
+    "UNF thread",
 };
 
 //double float array, Metric torque with lubricated components (based on Facom data)
@@ -187,7 +233,7 @@ const char *ScrewItems[] =
 //Max 450 N/m
 //0 for N/A
 
-float MetricLUB[ METRICROWS ] [ METRICCOLUMNS ] = 
+float Metric_LUB[ METRIC_ROWS ] [ METRIC_COLUMNS ] = 
 { //5.6   5.8     6.8     8.8     9.8     10.9    12.9
   {1.03,  1.44,   2.09,   2.78,   3.16,   4.09,   4.79}, //M4
   {2.03,  2.85,   4.14,   5.5,    6.27,   8.1,    9.5},  //M5
@@ -209,7 +255,7 @@ float MetricLUB[ METRICROWS ] [ METRICCOLUMNS ] =
 //Max 450 N/m
 //0 for N/A
 
-float MetricNLUB[ METRICROWS ] [ METRICCOLUMNS ] =
+float Metric_NOLUB[ METRIC_ROWS ] [ METRIC_COLUMNS ] =
 { //5.6   5.8     6.8     8.8     9.8     10.9    12.9
   {1.51,  2.11,   2.42,   3.22,   3.66,   4.74, 5.5},   //M4
   {3,     4.2,    4.81,   6.4,    7.27,   9.4,  11},    //M5
@@ -225,10 +271,10 @@ float MetricNLUB[ METRICROWS ] [ METRICCOLUMNS ] =
   {366,   0,      0,      0,      0,      0,    0}      //M24
 };
 
-//double float array, Imperial NC torque with lubricated components
+//double float array, Imperial UNC torque with lubricated components
 //those value are in lbs.ft
 
-float ImperialLUBNC[ IMPERIALNCROWS ] [ IMPERIALNCCOLUMNS ] =
+float Imperial_LUB_UNC[ IMPERIAL_UNC_ROWS ] [ IMPERIAL_UNC_COLUMNS ] =
 { //G1  G2    G5    G7    G8    A449  A490  A36   1045    4140
   {3,   4,    7,    9,    10,   6,    10,   3,    3,      5}, // 1/4"
   {6,   9,    14,   18,   20,   12,   20,   6,    7,      9}, // 5/16"
@@ -242,10 +288,10 @@ float ImperialLUBNC[ IMPERIALNCROWS ] [ IMPERIALNCCOLUMNS ] =
   {204, 204,  0,    0,    0,    0,    0,    204,  256,    0}    // 1"
 };
 
-//double float array, Imperial NC torque with none lubricated components
+//double float array, Imperial UNC torque with none lubricated components
 //those value are in lbs.ft
 
-float ImperialNLUBNC[ IMPERIALNCROWS ] [ IMPERIALNCCOLUMNS ] =
+float Imperial_NOLUB_UNC[ IMPERIAL_UNC_ROWS ] [ IMPERIAL_UNC_COLUMNS ] =
 { //G1  G2    G5    G7    G8    A449  A490  A36   1045    4140
   {4,   6,    9,    11,   13,   8,    13,   4,    4,      6}, // 1/4"
   {7,   12,   19,   24,   27,   17,   27,   7,    9,      12}, // 5/16"
@@ -259,10 +305,10 @@ float ImperialNLUBNC[ IMPERIALNCROWS ] [ IMPERIALNCCOLUMNS ] =
   {273, 0,    0,    0,    0,    0,    273,  341,  308,    0}    // 1"
 };
 
-//double float array, Imperial NF torque with lubricated components
+//double float array, Imperial UNF torque with lubricated components
 //those value are in lbs.ft
 
-float ImperialLUBNF[ IMPERIALNFROWS ] [ IMPERIALNFCOLUMNS ] =
+float Imperial_LUB_UNF[ IMPERIAL_UNF_ROWS ] [ IMPERIAL_UNF_COLUMNS ] =
 { //G1  G2    G5    G8    A449  A490  A36 1045    4140
   {3,   5,    8,    11,   7,    11,   3,    4,    5}, // 1/4"
   {6,   10,   16,   22,   14,   22,   6,    8,    10}, // 5/16"
@@ -276,10 +322,10 @@ float ImperialLUBNF[ IMPERIALNFROWS ] [ IMPERIALNFCOLUMNS ] =
   {229, 229,  0,    0,    0,    0,    229,  287,  0}     // 1"
 };
 
-//double float array, Imperial NF torque with none lubricated components
+//double float array, Imperial UNF torque with none lubricated components
 //those value are in lbs.ft
 
-float ImperialNLUBNF[ IMPERIALNFROWS ] [ IMPERIALNFCOLUMNS ] =
+float Imperial_NOLUB_UNF[ IMPERIAL_UNF_ROWS ] [ IMPERIAL_UNF_COLUMNS ] =
 { //G1  G2    G5    G8    A449  A490  A36   1045  4140
   {4,   6,    10,   15,   9,    15,   4,    5,    7}, // 1/4"
   {8,   13,   21,   29,   18,   29,   8,    10,   14}, // 5/16"
