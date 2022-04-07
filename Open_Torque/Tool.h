@@ -12,7 +12,7 @@
 #include <Wire.h>
 
 AT24C256 eeprom = AT24C256();
-HX711_ADC LoadCell(HX711SCK, HX711DOUT);
+HX711_ADC LoadCell(HX711DOUT, HX711SCK);
 Buzzer buzzer(BUZZ);
 MPU6050 mpu6050(Wire);
 
@@ -90,24 +90,32 @@ double EEPROMFloatRead()
   return valfloat;
 }
 
-void printval(int x, int y, int value)
+void printval(int x, int y, int widht, int value)
 {
+
   if(value<500) //this avoid to print wrong value like 13322223. 
   {
-    char s[10];
-    //move text to the left and val dec to true because pf 2 digits 
-    if(value>9 && value <100){x = x - WIDHTCHAR; dec = true;}
-
-    //same with 3 digits 
-    if(value>99){x = x - WIDHTCHAR*2; hec = true;}
-
-    //if value is <10 and was >10 before then clear screen. This helps to not having the screen blink all the time because of screen cleaning at every cycle. 
-    if(value <10){if(dec == true){dec = false;ssd1306_clearScreen();}}
-
-    //same with value <100 that was >100 before
-    if(value <100){if(hec == true){hec = false; ssd1306_clearScreen();}}
+    char s[3];
     
-    sprintf(s, "%d", value);
+    //move text to the left and val dec to true because of 2 digits 
+    
+    if(value<10)
+    {
+      x = x - 2*widht;
+      sprintf(s, "  %d", value);
+    }
+    
+    if(value>9 && value <100)
+    {
+      x = x - 2*widht;
+      sprintf(s, " %d", value);
+    }
+
+    if(value>99)
+    {
+      sprintf(s, "%d", value);
+    }
+    
     ssd1306_printFixed(x, HEIGHTOLED-y, s, STYLE_BOLD);
   }
   yield();

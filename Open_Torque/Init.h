@@ -153,10 +153,10 @@ unsigned long prevbuzzmillis = 0;
 unsigned long millisMeasure = 0;
 unsigned long millisButton = 0;
 unsigned long millisTare = 0;
-unsigned long millisCalibration = 0;
+unsigned long millisCalibration = 500;
 
-boolean dec = false;
-boolean hec = false;
+//boolean dec = false;
+//boolean hec = false;
 
 boolean PauseAcceuil = false;
 

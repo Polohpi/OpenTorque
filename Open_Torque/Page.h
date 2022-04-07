@@ -87,7 +87,7 @@ void ScalePage()
   while(resume == false)
   {
     ssd1306_setFixedFont(comic_sans_font24x32_123);
-    printval(posx, posy, valmeasure*WeightRatio);
+    printval(posx, posy, WIDHTCHAR, valmeasure*WeightRatio);
     ssd1306_setFixedFont(ssd1306xled_font8x16);
     ssd1306_printFixed(0, 0, "Scale", STYLE_NORMAL);
     
@@ -116,6 +116,7 @@ void ScalePage()
 
 void ManualPage()
 {
+  //this write the current mode number to the eeprom if this number was different before. This is used when coming to manualpage frome another one.
   if(GetLastMode() != MANUALMODE)
   {
     eeprom.write(MANUALMODE, LASTMODE_ADD_EEPROM);
@@ -133,11 +134,12 @@ void ManualPage()
     ssd1306_setFixedFont(ssd1306xled_font8x16);
     ssd1306_printFixed(posx+30, HEIGHTOLED-posy+14, Unit, STYLE_NORMAL);
     ssd1306_printFixed(0, 0, "ManualT", STYLE_NORMAL);
+    printval(110, 33, 8, target);
     
     if(valmeasure<200)
     {
       ssd1306_setFixedFont(comic_sans_font24x32_123);
-      printval(posx, posy, target);
+      printval(posx, posy, WIDHTCHAR, Torque);
       
       if(buttonUPstate == true) 
       {
@@ -165,13 +167,12 @@ void ManualPage()
         
         MainMenuSelectionState = true;
         resume = true;
-        //goto labelMenu;
       }
     }
     else
     {
       ssd1306_setFixedFont(comic_sans_font24x32_123);
-      printval(posx, posy, Torque);
+      printval(posx, posy, WIDHTCHAR, Torque);
     }
     yield();
   }
@@ -253,7 +254,7 @@ void CalibrationPage()
     if(valmeasure<50)
     {
       ssd1306_setFixedFont(comic_sans_font24x32_123);
-      printval(posx, posy, Calibrationtarget);
+      printval(posx, posy, WIDHTCHAR, Calibrationtarget);
       
       if(buttonUPstate == true) 
       {
@@ -282,7 +283,7 @@ void CalibrationPage()
     else
     {
       ssd1306_setFixedFont(comic_sans_font24x32_123);
-      printval(posx, posy, valmeasure*WeightRatio);
+      printval(posx, posy, WIDHTCHAR, valmeasure*WeightRatio);
       
       if(buttonENTERstate == true)
       {
@@ -326,11 +327,11 @@ void AngularPage()
     
     if(value < 2 )
     {
-      printval(posx, posy, AngularTarget);
+      printval(posx, posy, WIDHTCHAR, AngularTarget);
     }
     else
     {
-      printval(posx, posy, value);
+      printval(posx, posy, WIDHTCHAR, value);
     }
 
     
@@ -458,8 +459,10 @@ void MetricPage()
   
   while(resume == false)
   {
-    //ssd1306_setFixedFont(ssd1306xled_font5x7_AB);
-    ussd1306_setFixedFont(ssd1306xled_font8x16);
+    ssd1306_setFixedFont(ssd1306xled_font8x16);
+    ssd1306_printFixed(0, 0, "Metric", STYLE_NORMAL);
+    
+    ssd1306_setFixedFont(ssd1306xled_font8x16);
     const char *charUnit;
     if(MetricSize == M4){charUnit = "M4";}
     if(MetricSize == M5){charUnit = "M5";}
