@@ -382,7 +382,19 @@ void SettingMenuSelection()
           UnitMenuSelectionState = true;
           resume = true;
         }
+        if(ssd1306_menuSelection(&SettingMenu) == 3)
+        {
+          ssd1306_clearScreen();
+          ScrewGradeMenuSelectionState = true;
+          resume = true;
+        }
         if(ssd1306_menuSelection(&SettingMenu) == 4)
+        {
+          ssd1306_clearScreen();
+          ScrewLubPage();
+          resume = true;
+        }
+        if(ssd1306_menuSelection(&SettingMenu) == 5)
         {
           ssd1306_clearScreen();
           CalibrationPage();
@@ -468,6 +480,62 @@ void MainMenuSelection()
         buttonUPstate = false;
         ssd1306_menuUp(&MainMenu);
         ssd1306_updateMenu(&MainMenu);
+      }
+      yield();
+    }
+  }
+  yield();
+}
+
+void ScrewGradeMenuSelection()
+{
+  if(ScrewGradeMenuSelectionState == true)
+  {
+    ScrewGradeMenuSelectionState = false;
+    ssd1306_clearScreen();
+    boolean resume = false;
+    
+    while(resume == false)
+    {
+      ssd1306_setFixedFont(ssd1306xled_font8x16);
+      ssd1306_showMenu( &ScrewGradeMenu );
+      
+      if(buttonENTERstate == true)
+      {
+        millisButton = millis();
+        buttonENTERstate = false;
+        if(ssd1306_menuSelection(&ScrewGradeMenu) == 0)
+        {
+          ssd1306_clearScreen();
+          SettingMenuSelectionState = true;
+          resume = true;
+        }
+        if(ssd1306_menuSelection(&ScrewGradeMenu) == 1)
+        {
+          ssd1306_clearScreen();
+          MetricGradePage();
+          resume = true;
+        }
+        if(ssd1306_menuSelection(&ScrewGradeMenu) == 2)
+        {
+          ssd1306_clearScreen();
+          ImperialGradePage();
+          resume = true;
+        }
+      }
+      if(buttonDOWNstate == true)
+      {
+        millisButton = millis();
+        buttonDOWNstate = false;
+        ssd1306_menuDown(&ScrewGradeMenu);
+        ssd1306_updateMenu(&ScrewGradeMenu);
+      }
+      if(buttonUPstate == true)
+      {
+        millisButton = millis();
+        buttonUPstate = false;
+        ssd1306_menuUp(&ScrewGradeMenu);
+        ssd1306_updateMenu(&ScrewGradeMenu);
       }
       yield();
     }

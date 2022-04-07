@@ -132,9 +132,9 @@ void ManualPage()
   while(resume == false)
   {
     ssd1306_setFixedFont(ssd1306xled_font8x16);
-    ssd1306_printFixed(posx+30, HEIGHTOLED-posy+14, Unit, STYLE_NORMAL);
+    ssd1306_printFixed(posx+30, HEIGHTOLED-posy+20, Unit, STYLE_NORMAL);
     ssd1306_printFixed(0, 0, "ManualT", STYLE_NORMAL);
-    printval(110, 33, 8, target);
+    printval(110, 8, 8, target);
     
     if(valmeasure<200)
     {
@@ -190,7 +190,9 @@ void LeverPage()
   while(resume == false)
   {
     ssd1306_setFixedFont(ssd1306xled_font8x16);
-    sprintf(s, "%d", lever);
+    ssd1306_printFixed(0, 0, "Lever Setting", STYLE_NORMAL);
+    
+    sprintf(s, "%d mm", lever);
     ssd1306_printFixed(posx+30, HEIGHTOLED-posy+14, s, STYLE_NORMAL);
     
     if(buttonUPstate == true) 
@@ -383,6 +385,7 @@ void LengthPage()
   while(resume == false)
   {
     ssd1306_setFixedFont(ssd1306xled_font8x16);
+    
     const char *charUnit;
     if(LengthUnit == CM){charUnit = "centimeter";}
     if(LengthUnit == DM){charUnit = "decimeter";}
@@ -447,49 +450,145 @@ void MetricPage()
     eeprom.write(METRICMODE, LASTMODE_ADD_EEPROM);
   }
   
-  int posx = 35;
+  int posx = 55;
   int posy = 15;
   ssd1306_clearScreen();
   boolean resume = false;
 
-  eeprom.write(0, METRICSIZE_ADD_EEPROM);
-  eeprom.write(0, METRICGRADE_ADD_EEPROM);
+
 
   Serial.println("MetricPage");
   
   while(resume == false)
   {
     ssd1306_setFixedFont(ssd1306xled_font8x16);
+    ssd1306_printFixed(posx+30, HEIGHTOLED-posy+24, "N/m", STYLE_NORMAL);
     ssd1306_printFixed(0, 0, "Metric", STYLE_NORMAL);
     
     ssd1306_setFixedFont(ssd1306xled_font8x16);
-    const char *charUnit;
-    if(MetricSize == M4){charUnit = "M4";}
-    if(MetricSize == M5){charUnit = "M5";}
-    if(MetricSize == M6){charUnit = "M6";}
-    if(MetricSize == M8){charUnit = "M8";}
-    if(MetricSize == M10){charUnit = "M10";}
-    if(MetricSize == M12){charUnit = "M12";}
-    if(MetricSize == M14){charUnit = "M14";}
-    if(MetricSize == M16){charUnit = "M16";}
-    if(MetricSize == M18){charUnit = "M18";}
-    if(MetricSize == M20){charUnit = "M20";}
-    if(MetricSize == M22){charUnit = "M22";}
-    if(MetricSize == M24){charUnit = "M24";}
-    if(MetricSize == M27){charUnit = "M27";}
+    const char *SizeUnit;
+    if(MetricSize == M4){SizeUnit = " M4";}
+    if(MetricSize == M5){SizeUnit = " M5";}
+    if(MetricSize == M6){SizeUnit = " M6";}
+    if(MetricSize == M8){SizeUnit = " M8";}
+    if(MetricSize == M10){SizeUnit = "M10";}
+    if(MetricSize == M12){SizeUnit = "M12";}
+    if(MetricSize == M14){SizeUnit = "M14";}
+    if(MetricSize == M16){SizeUnit = "M16";}
+    if(MetricSize == M18){SizeUnit = "M18";}
+    if(MetricSize == M20){SizeUnit = "M20";}
+    if(MetricSize == M22){SizeUnit = "M22";}
+    if(MetricSize == M24){SizeUnit = "M24";}
+    if(MetricSize == M27){SizeUnit = "M27";}
 
-    ssd1306_printFixed(posx+15, HEIGHTOLED-posy+14, charUnit, STYLE_NORMAL);
+    const char *GradeUnit;
+    if(MetricGrade == METRIC_5_6){GradeUnit =" G5.6";}
+    if(MetricGrade == METRIC_5_8){GradeUnit = " G5.8";}
+    if(MetricGrade == METRIC_6_8){GradeUnit = " G6.8";}
+    if(MetricGrade == METRIC_8_8){GradeUnit = " G8.8";}
+    if(MetricGrade == METRIC_9_8){GradeUnit = " G9_8";}
+    if(MetricGrade == METRIC_10_9){GradeUnit = "G10.9";}
+    if(MetricGrade == METRIC_12_9){GradeUnit = "G12.9";}
+
+    const char *LubState;
+    if(Lub == false){LubState = "NOLUB";}
+    else(LubState = "  LUB");
+
+    ssd1306_printFixed(87, 5, LubState, STYLE_NORMAL);
+    ssd1306_printFixed(102, 35, SizeUnit, STYLE_NORMAL);
+    ssd1306_printFixed(87, 20, GradeUnit, STYLE_NORMAL);
+
+    if(valmeasure<200)
+    { 
+      ssd1306_setFixedFont(comic_sans_font24x32_123);
+      
+      if(Lub == false)
+      {
+        printval(posx, posy, WIDHTCHAR, round( Metric_NOLUB[MetricSize][MetricGrade] ));
+      }
+      else
+      {
+        printval(posx, posy, WIDHTCHAR, round( Metric_LUB[MetricSize][MetricGrade] ));
+      }
+      
+      if(buttonUPstate == true) 
+        {
+          millisButton = millis();
+          buttonUPstate = false;
+          if(MetricSize < 12)
+          {
+            Serial.println("UP");
+            //ssd1306_clearScreen();
+            MetricSize++;
+            eeprom.write(MetricSize, METRICSIZE_ADD_EEPROM);
+          }
+        }
+              
+        if(buttonDOWNstate == true)
+        {
+          millisButton = millis();
+          buttonDOWNstate = false;
+          if(MetricSize > 0)
+          {
+            Serial.println("DOWN");
+            //ssd1306_clearScreen();
+            MetricSize--;
+            eeprom.write(MetricSize, METRICSIZE_ADD_EEPROM);
+          }
+        }
+        
+        if(buttonENTERstate == true)
+        { 
+          millisButton = millis();
+          buttonENTERstate = false;
+          Serial.println("ENTER");
+          MainMenuSelectionState = true;
+          resume = true;
+        }
+    }
+    else
+    {
+      ssd1306_setFixedFont(comic_sans_font24x32_123);
+      printval(posx, posy, WIDHTCHAR, Torque);
+    }
+    yield();
+  }
+  yield();
+}
+
+void MetricGradePage()
+{
+  int posx = 25;
+  int posy = 25;
+  ssd1306_clearScreen();
+  boolean resume = false;
+
+  
+  while(resume == false)
+  {
+    ssd1306_setFixedFont(ssd1306xled_font8x16);
+    ssd1306_printFixed(0, 0, "Metric Grade", STYLE_NORMAL);
     
+    ssd1306_setFixedFont(ssd1306xled_font8x16);    
+    const char *GradeUnit;
+    if(MetricGrade == METRIC_5_6){GradeUnit ="G5.6";}
+    if(MetricGrade == METRIC_5_8){GradeUnit = "G5.8";}
+    if(MetricGrade == METRIC_6_8){GradeUnit = "G6.8";}
+    if(MetricGrade == METRIC_8_8){GradeUnit = "G8.8";}
+    if(MetricGrade == METRIC_9_8){GradeUnit = "G9_8";}
+    if(MetricGrade == METRIC_10_9){GradeUnit = "G10.9";}
+    if(MetricGrade == METRIC_12_9){GradeUnit = "G12.9";}
+    
+    ssd1306_printFixed(112, 0, GradeUnit, STYLE_NORMAL);   
+     
     if(buttonUPstate == true) 
       {
         millisButton = millis();
         buttonUPstate = false;
-        if(MetricSize < 12)
+        if(lever < LEVERMAX)
         {
-          Serial.println("UP");
           ssd1306_clearScreen();
-          MetricSize++;
-          eeprom.write(MetricSize, METRICSIZE_ADD_EEPROM);
+          lever += 100;
         }
       }
             
@@ -497,12 +596,10 @@ void MetricPage()
       {
         millisButton = millis();
         buttonDOWNstate = false;
-        if(WeightUnit > 0)
+        if(lever > LEVERMIN)
         {
-          Serial.println("DOWN");
           ssd1306_clearScreen();
-          MetricSize--;
-          eeprom.write(MetricSize, METRICSIZE_ADD_EEPROM);
+          lever -= 100;
         }
       }
       
@@ -510,10 +607,128 @@ void MetricPage()
       { 
         millisButton = millis();
         buttonENTERstate = false;
-        Serial.println("ENTER");
-        MainMenuSelectionState = true;
+        
+        eeprom.write(lever/10, LEVER_ADD_EEPROM);
+        SettingMenuSelectionState = true;
         resume = true;
       }
+
+    yield();
+  }
+  yield();
+}
+
+void ImperialGradePage()
+{
+  int posx = 25;
+  int posy = 25;
+  ssd1306_clearScreen();
+  char s[10];
+  boolean resume = false;
+  while(resume == false)
+  {
+    ssd1306_setFixedFont(ssd1306xled_font8x16);
+    ssd1306_printFixed(0, 0, "Lever Setting", STYLE_NORMAL);
+    
+    sprintf(s, "%d mm", lever);
+    ssd1306_printFixed(posx+30, HEIGHTOLED-posy+14, s, STYLE_NORMAL);
+    
+    if(buttonUPstate == true) 
+      {
+        millisButton = millis();
+        buttonUPstate = false;
+        if(lever < LEVERMAX)
+        {
+          ssd1306_clearScreen();
+          lever += 100;
+        }
+      }
+            
+      if(buttonDOWNstate == true)
+      {
+        millisButton = millis();
+        buttonDOWNstate = false;
+        if(lever > LEVERMIN)
+        {
+          ssd1306_clearScreen();
+          lever -= 100;
+        }
+      }
+      
+      if(buttonENTERstate == true)
+      { 
+        millisButton = millis();
+        buttonENTERstate = false;
+        
+        eeprom.write(lever/10, LEVER_ADD_EEPROM);
+        SettingMenuSelectionState = true;
+        resume = true;
+      }
+
+    yield();
+  }
+  yield();
+}
+
+void ScrewLubPage()
+{
+  int posx = 25;
+  int posy = 25;
+  ssd1306_clearScreen();
+  boolean resume = false;
+
+  while(resume == false)
+  {
+    ssd1306_setFixedFont(ssd1306xled_font8x16);
+    ssd1306_printFixed(0, 0, "Screw Lub", STYLE_NORMAL);
+
+    if(Lub == false)
+    {
+      ssd1306_printFixed(posx+30, HEIGHTOLED-posy+14, " NO", STYLE_NORMAL);
+    }
+    else
+    {
+      ssd1306_printFixed(posx+30, HEIGHTOLED-posy+14, "YES", STYLE_NORMAL); 
+    }
+    
+    if(buttonUPstate == true) 
+      {
+        millisButton = millis();
+        buttonUPstate = false;
+        if(Lub == false )
+        {
+          ssd1306_clearScreen();
+          Lub = true;
+        }
+      }
+            
+      if(buttonDOWNstate == true)
+      {
+        millisButton = millis();
+        buttonDOWNstate = false;
+        if(Lub == true)
+        {
+          ssd1306_clearScreen();
+          Lub = false;
+        }
+      }
+      
+      if(buttonENTERstate == true)
+      { 
+        millisButton = millis();
+        buttonENTERstate = false;
+        if(Lub == false)
+        {
+          eeprom.write(0, LUB_ADD_EEPROM);
+        }
+        else
+        {
+          eeprom.write(1, LUB_ADD_EEPROM);
+        }
+        SettingMenuSelectionState = true;
+        resume = true;
+      }
+
     yield();
   }
   yield();

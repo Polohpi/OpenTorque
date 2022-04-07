@@ -24,6 +24,7 @@ SAppMenu TorqueMenu;
 SAppMenu UnitMenu;
 SAppMenu ScrewMenu;
 SAppMenu ImperialMenu;
+SAppMenu ScrewGradeMenu;
 
 void EEPROMFloatWrite(float Val)
 {
@@ -96,18 +97,16 @@ void printval(int x, int y, int widht, int value)
   if(value<500) //this avoid to print wrong value like 13322223. 
   {
     char s[3];
-    
+    x = x - 2*widht;
     //move text to the left and val dec to true because of 2 digits 
     
     if(value<10)
     {
-      x = x - 2*widht;
       sprintf(s, "  %d", value);
     }
     
     if(value>9 && value <100)
     {
-      x = x - 2*widht;
       sprintf(s, " %d", value);
     }
 
@@ -248,5 +247,6 @@ float LoadCellRead()
     return i;
   }
 }
+
 
 #endif

@@ -41,6 +41,7 @@ void setup() {
   Scheduler.startLoop(SettingMenuSelection);
   Scheduler.startLoop(UnitMenuSelection);
   Scheduler.startLoop(ImperialMenuSelection);
+  Scheduler.startLoop(ScrewGradeMenuSelection);
   
   #ifdef DEBUGOT
   Serial.println("Setup");
@@ -67,20 +68,53 @@ void setup() {
   //ImperialGrade = eeprom.read(IMPERIALGRADE_ADD_EEPROM);
   //ImperialSize = eeprom.read(IMPERIALSIZE_ADD_EEPROM);
   //ImperialThread = eeprom.read(IMPERIALTHREAD_ADD_EEPROM);
-  //MetricGrade = eeprom.read(METRICGRADE_ADD_EEPROM);
-  //MetricSize = eeprom.read(METRICSIZE_ADD_EEPROM);
+  MetricGrade = eeprom.read(METRICGRADE_ADD_EEPROM);
+  MetricSize = eeprom.read(METRICSIZE_ADD_EEPROM);
   //CalibrationVal = EEPROMFloatRead();
 
-  SetUnit();
-  
-  ssd1306_createMenu( &MainMenu, MainItems, sizeof(MainItems) / sizeof(char *) );
-  ssd1306_createMenu( &ModeMenu, ModeItems, sizeof(ModeItems) / sizeof(char *) );
-  ssd1306_createMenu( &SettingMenu, SettingItems, sizeof(SettingItems) / sizeof(char *) );
-  ssd1306_createMenu( &TorqueMenu, TorqueItems, sizeof(TorqueItems) / sizeof(char *) );
-  ssd1306_createMenu( &UnitMenu, UnitItems, sizeof(UnitItems) / sizeof(char *) );
-  ssd1306_createMenu( &ScrewMenu, ScrewItems, sizeof(ScrewItems) / sizeof(char *) );
-  ssd1306_createMenu( &ImperialMenu, ImperialItems, sizeof(ImperialItems) / sizeof(char *) );
+  if(eeprom.read(LUB_ADD_EEPROM) == 0)
+  {
+    Lub = false;
+  }
+  else 
+  {
+    Lub = true;
+  }
 
+  SetUnit();
+
+//  -Main
+//    Tare
+//    -mode
+//      -Torque
+//        Manual
+//        -Screw
+//          Metric
+//          Imperial
+//      Angular
+//      Scale
+//    -Settings
+//      Lever
+//      -unit
+//        Weight
+//        Length
+//      -Screw grade
+//        Metric
+//        Imperial
+//      -Calibration
+//      -Lub
+    
+  
+  ssd1306_createMenu( &MainMenu, MainItems, sizeof(MainItems) / sizeof(char *) ); //first menu : Tare Mode Settings
+  ssd1306_createMenu( &ModeMenu, ModeItems, sizeof(ModeItems) / sizeof(char *) ); //torque angular scale
+  ssd1306_createMenu( &SettingMenu, SettingItems, sizeof(SettingItems) / sizeof(char *) ); //Lever unit Screw Grade
+  ssd1306_createMenu( &TorqueMenu, TorqueItems, sizeof(TorqueItems) / sizeof(char *) ); // Manual Screw
+  ssd1306_createMenu( &UnitMenu, UnitItems, sizeof(UnitItems) / sizeof(char *) ); //Weight Length
+  ssd1306_createMenu( &ScrewMenu, ScrewItems, sizeof(ScrewItems) / sizeof(char *) ); // Metric Imperial
+  ssd1306_createMenu( &ImperialMenu, ImperialItems, sizeof(ImperialItems) / sizeof(char *) ); //unc thread unf thread
+  ssd1306_createMenu( &ScrewGradeMenu, ScrewGradeItems, sizeof(ScrewGradeItems) / sizeof(char *) ); //unc thread unf thread
+
+  
   //LoadCell.setCalFactor(EEPROMFloatRead());
   //Serial.println("val : " + String(EEPROMFloatRead()));
 

@@ -18,8 +18,9 @@
 #define DELAYBUTTON 150
 #define DELAYTARE 2000
 #define DELAYCALIBRATION 1000
+#define DELAYMEASURE 100
 #define TORQUEMIN 2
-#define LEVERMAX 1500
+#define LEVERMAX 2000
 #define LEVERMIN 200
 
 //define EEPROM addresses 
@@ -35,6 +36,7 @@
 #define METRICSIZE_ADD_EEPROM 9
 #define IMPERIALTHREAD_ADD_EEPROM 10
 #define CALIBRATIONVALUE_ADD_EEPROM 15
+#define LUB_ADD_EEPROM 16
 
 #define MANUALMODE 0
 #define METRICMODE 1
@@ -155,12 +157,10 @@ unsigned long millisButton = 0;
 unsigned long millisTare = 0;
 unsigned long millisCalibration = 500;
 
-//boolean dec = false;
-//boolean hec = false;
 
 boolean PauseAcceuil = false;
 
-#define DELAYMEASURE 100
+boolean Lub;
 
 boolean buttonUPstate = false;
 boolean buttonDOWNstate = false;
@@ -174,6 +174,7 @@ boolean ScrewMenuSelectionState = false;
 boolean SettingMenuSelectionState = false;
 boolean UnitMenuSelectionState = false;
 boolean ImperialMenuSelectionState = false;
+boolean ScrewGradeMenuSelectionState = false;
 
 const char *MainItems[] =
 {
@@ -197,6 +198,7 @@ const char *SettingItems[] =
     "Lever",
     "Unit",
     "Screw Grade",
+    "Screw Lub",
     "Calibration",
 };
 
@@ -226,6 +228,13 @@ const char *ImperialItems[] =
     "Back",
     "UNC thread",
     "UNF thread",
+};
+
+const char *ScrewGradeItems[] =
+{
+    "Back",
+    "Metric",
+    "Imperial",
 };
 
 //double float array, Metric torque with lubricated components (based on Facom data)
