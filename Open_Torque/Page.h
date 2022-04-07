@@ -435,12 +435,234 @@ void LengthPage()
 
 void ImperialUNFPage()
 {
+  if(GetLastMode() != IMPERIALUNFMODE)
+  {
+    eeprom.write(IMPERIALUNFMODE, LASTMODE_ADD_EEPROM);
+  }
   
+  WeightUnit = POUND;
+  LengthUnit = FEET;
+  
+  int posx = 55;
+  int posy = 15;
+  ssd1306_clearScreen();
+  boolean resume = false;
+
+
+
+  Serial.println("ImperialPage");
+  
+  while(resume == false)
+  {
+    ssd1306_setFixedFont(ssd1306xled_font8x16);
+    ssd1306_printFixed(posx+28, HEIGHTOLED-posy+24, "lb.ft", STYLE_NORMAL);
+    ssd1306_printFixed(0, 0, "UNF", STYLE_NORMAL);
+    
+    ssd1306_setFixedFont(ssd1306xled_font8x16);
+
+    const char *SizeUnit;
+    if(ImperialSize == IMPERIAL_1_4) {SizeUnit = " 1/4";}
+    if(ImperialSize == IMPERIAL_5_16){SizeUnit = "5/16";}
+    if(ImperialSize == IMPERIAL_3_8) {SizeUnit = " 3/8";}
+    if(ImperialSize == IMPERIAL_7_16){SizeUnit = "7/16";}
+    if(ImperialSize == IMPERIAL_1_2) {SizeUnit = " 1/2";}
+    if(ImperialSize == IMPERIAL_9_16){SizeUnit = "9/16";}
+    if(ImperialSize == IMPERIAL_5_8) {SizeUnit = " 5/8";}
+    if(ImperialSize == IMPERIAL_3_4) {SizeUnit = " 3/4";}
+    if(ImperialSize == IMPERIAL_7_8) {SizeUnit = " 7/8";}
+    if(ImperialSize == IMPERIAL_1_0) {SizeUnit = "1 in";}
+
+
+    const char *GradeUnit;
+    if(ImperialGrade == IMPERIAL_G1){GradeUnit ="  G1";}
+    if(ImperialGrade == IMPERIAL_G2){GradeUnit = "  G2";}
+    if(ImperialGrade == IMPERIAL_G2){GradeUnit = "  G5";}
+    if(ImperialGrade == IMPERIAL_G7){GradeUnit = "  G7";}
+    if(ImperialGrade == IMPERIAL_G8){GradeUnit = "  G8";}
+    if(ImperialGrade == IMPERIAL_A449){GradeUnit = "A449";}
+    if(ImperialGrade == IMPERIAL_A490){GradeUnit = "A490";}
+    if(ImperialGrade == IMPERIAL_A36){GradeUnit = " G36";}
+    if(ImperialGrade == IMPERIAL_G1045){GradeUnit = "1045";}
+    if(ImperialGrade == IMPERIAL_G4140){GradeUnit = "4140";}
+
+    const char *LubState;
+    if(Lub == false){LubState = "NOLUB";}
+    else(LubState = "  LUB");
+
+    ssd1306_printFixed(87, 5, LubState, STYLE_NORMAL);
+    ssd1306_printFixed(95, 35, SizeUnit, STYLE_NORMAL);
+    ssd1306_printFixed(87, 20, GradeUnit, STYLE_NORMAL);
+
+    if(valmeasure<200)
+    { 
+      ssd1306_setFixedFont(comic_sans_font24x32_123);
+      
+      if(Lub == false)
+      {
+        printval(posx, posy, WIDHTCHAR, round( Imperial_NOLUB_UNF[ImperialSize][ImperialGrade] ));
+      }
+      else
+      {
+        printval(posx, posy, WIDHTCHAR, round( Imperial_LUB_UNF[ImperialSize][ImperialGrade] ));
+      }
+      
+      if(buttonUPstate == true) 
+        {
+          millisButton = millis();
+          buttonUPstate = false;
+          if(ImperialSize < 9)
+          {
+            Serial.println("UP");
+            ImperialSize++;
+            eeprom.write(ImperialSize, IMPERIALSIZE_ADD_EEPROM);
+          }
+        }
+              
+        if(buttonDOWNstate == true)
+        {
+          millisButton = millis();
+          buttonDOWNstate = false;
+          if(ImperialSize > 0)
+          {
+            Serial.println("DOWN");
+            ImperialSize--;
+            eeprom.write(ImperialSize, IMPERIALSIZE_ADD_EEPROM);
+          }
+        }
+        
+        if(buttonENTERstate == true)
+        { 
+          millisButton = millis();
+          buttonENTERstate = false;
+          Serial.println("ENTER");
+          MainMenuSelectionState = true;
+          resume = true;
+        }
+    }
+    else
+    {
+      ssd1306_setFixedFont(comic_sans_font24x32_123);
+      printval(posx, posy, WIDHTCHAR, Torque);
+    }
+    yield();
+  }
+  yield();
 }
 
 void ImperialUNCPage()
 {
+  if(GetLastMode() != IMPERIALUNCMODE)
+  {
+    eeprom.write(IMPERIALUNCMODE, LASTMODE_ADD_EEPROM);
+  }
   
+  WeightUnit = POUND;
+  LengthUnit = FEET;
+  
+  int posx = 55;
+  int posy = 15;
+  ssd1306_clearScreen();
+  boolean resume = false;
+
+
+
+  Serial.println("UNCPage");
+  
+  while(resume == false)
+  {
+    ssd1306_setFixedFont(ssd1306xled_font8x16);
+    ssd1306_printFixed(posx+28, HEIGHTOLED-posy+24, "lb.ft", STYLE_NORMAL);
+    ssd1306_printFixed(0, 0, "UNC", STYLE_NORMAL);
+    
+    ssd1306_setFixedFont(ssd1306xled_font8x16);
+
+    const char *SizeUnit;
+    if(ImperialSize == IMPERIAL_1_4) {SizeUnit = " 1/4";}
+    if(ImperialSize == IMPERIAL_5_16){SizeUnit = "5/16";}
+    if(ImperialSize == IMPERIAL_3_8) {SizeUnit = " 3/8";}
+    if(ImperialSize == IMPERIAL_7_16){SizeUnit = "7/16";}
+    if(ImperialSize == IMPERIAL_1_2) {SizeUnit = " 1/2";}
+    if(ImperialSize == IMPERIAL_9_16){SizeUnit = "9/16";}
+    if(ImperialSize == IMPERIAL_5_8) {SizeUnit = " 5/8";}
+    if(ImperialSize == IMPERIAL_3_4) {SizeUnit = " 3/4";}
+    if(ImperialSize == IMPERIAL_7_8) {SizeUnit = " 7/8";}
+    if(ImperialSize == IMPERIAL_1_0) {SizeUnit = "1 in";}
+
+
+    const char *GradeUnit;
+    if(ImperialGrade == IMPERIAL_G1){GradeUnit ="  G1";}
+    if(ImperialGrade == IMPERIAL_G2){GradeUnit = "  G2";}
+    if(ImperialGrade == IMPERIAL_G2){GradeUnit = "  G5";}
+    if(ImperialGrade == IMPERIAL_G7){GradeUnit = "  G7";}
+    if(ImperialGrade == IMPERIAL_G8){GradeUnit = "  G8";}
+    if(ImperialGrade == IMPERIAL_A449){GradeUnit = "A449";}
+    if(ImperialGrade == IMPERIAL_A490){GradeUnit = "A490";}
+    if(ImperialGrade == IMPERIAL_A36){GradeUnit = " G36";}
+    if(ImperialGrade == IMPERIAL_G1045){GradeUnit = "1045";}
+    if(ImperialGrade == IMPERIAL_G4140){GradeUnit = "4140";}
+
+    const char *LubState;
+    if(Lub == false){LubState = "NOLUB";}
+    else(LubState = "  LUB");
+
+    ssd1306_printFixed(87, 5, LubState, STYLE_NORMAL);
+    ssd1306_printFixed(95, 35, SizeUnit, STYLE_NORMAL);
+    ssd1306_printFixed(87, 20, GradeUnit, STYLE_NORMAL);
+
+    if(valmeasure<200)
+    { 
+      ssd1306_setFixedFont(comic_sans_font24x32_123);
+      
+      if(Lub == false)
+      {
+        printval(posx, posy, WIDHTCHAR, round( Imperial_NOLUB_UNC[ImperialSize][ImperialGrade] ));
+      }
+      else
+      {
+        printval(posx, posy, WIDHTCHAR, round( Imperial_LUB_UNC[ImperialSize][ImperialGrade] ));
+      }
+      
+      if(buttonUPstate == true) 
+        {
+          millisButton = millis();
+          buttonUPstate = false;
+          if(ImperialSize < 9)
+          {
+            Serial.println("UP");
+            ImperialSize++;
+            eeprom.write(ImperialSize, IMPERIALSIZE_ADD_EEPROM);
+          }
+        }
+              
+        if(buttonDOWNstate == true)
+        {
+          millisButton = millis();
+          buttonDOWNstate = false;
+          if(ImperialSize > 0)
+          {
+            Serial.println("DOWN");
+            ImperialSize--;
+            eeprom.write(ImperialSize, IMPERIALSIZE_ADD_EEPROM);
+          }
+        }
+        
+        if(buttonENTERstate == true)
+        { 
+          millisButton = millis();
+          buttonENTERstate = false;
+          Serial.println("ENTER");
+          MainMenuSelectionState = true;
+          resume = true;
+        }
+    }
+    else
+    {
+      ssd1306_setFixedFont(comic_sans_font24x32_123);
+      printval(posx, posy, WIDHTCHAR, Torque);
+    }
+    yield();
+  }
+  yield();
 }
 
 void MetricPage()
@@ -449,6 +671,9 @@ void MetricPage()
   {
     eeprom.write(METRICMODE, LASTMODE_ADD_EEPROM);
   }
+
+  WeightUnit = N;
+  LengthUnit = M;
   
   int posx = 55;
   int posy = 15;
@@ -462,7 +687,7 @@ void MetricPage()
   while(resume == false)
   {
     ssd1306_setFixedFont(ssd1306xled_font8x16);
-    ssd1306_printFixed(posx+30, HEIGHTOLED-posy+24, "N/m", STYLE_NORMAL);
+    ssd1306_printFixed(posx+28, HEIGHTOLED-posy+24, "  N/m", STYLE_NORMAL);
     ssd1306_printFixed(0, 0, "Metric", STYLE_NORMAL);
     
     ssd1306_setFixedFont(ssd1306xled_font8x16);
@@ -486,7 +711,7 @@ void MetricPage()
     if(MetricGrade == METRIC_5_8){GradeUnit = " G5.8";}
     if(MetricGrade == METRIC_6_8){GradeUnit = " G6.8";}
     if(MetricGrade == METRIC_8_8){GradeUnit = " G8.8";}
-    if(MetricGrade == METRIC_9_8){GradeUnit = " G9_8";}
+    if(MetricGrade == METRIC_9_8){GradeUnit = " G9.8";}
     if(MetricGrade == METRIC_10_9){GradeUnit = "G10.9";}
     if(MetricGrade == METRIC_12_9){GradeUnit = "G12.9";}
 
@@ -571,24 +796,24 @@ void MetricGradePage()
     
     ssd1306_setFixedFont(ssd1306xled_font8x16);    
     const char *GradeUnit;
-    if(MetricGrade == METRIC_5_6){GradeUnit ="G5.6";}
-    if(MetricGrade == METRIC_5_8){GradeUnit = "G5.8";}
-    if(MetricGrade == METRIC_6_8){GradeUnit = "G6.8";}
-    if(MetricGrade == METRIC_8_8){GradeUnit = "G8.8";}
-    if(MetricGrade == METRIC_9_8){GradeUnit = "G9_8";}
+    if(MetricGrade == METRIC_5_6){GradeUnit =" G5.6";}
+    if(MetricGrade == METRIC_5_8){GradeUnit = " G5.8";}
+    if(MetricGrade == METRIC_6_8){GradeUnit = " G6.8";}
+    if(MetricGrade == METRIC_8_8){GradeUnit = " G8.8";}
+    if(MetricGrade == METRIC_9_8){GradeUnit = " G9.8";}
     if(MetricGrade == METRIC_10_9){GradeUnit = "G10.9";}
     if(MetricGrade == METRIC_12_9){GradeUnit = "G12.9";}
     
-    ssd1306_printFixed(112, 0, GradeUnit, STYLE_NORMAL);   
+    ssd1306_printFixed(55, 28, GradeUnit, STYLE_NORMAL);   
      
     if(buttonUPstate == true) 
       {
         millisButton = millis();
         buttonUPstate = false;
-        if(lever < LEVERMAX)
+        if(MetricGrade < 6)
         {
           ssd1306_clearScreen();
-          lever += 100;
+          MetricGrade++;
         }
       }
             
@@ -596,10 +821,10 @@ void MetricGradePage()
       {
         millisButton = millis();
         buttonDOWNstate = false;
-        if(lever > LEVERMIN)
+        if(MetricGrade > 0)
         {
           ssd1306_clearScreen();
-          lever -= 100;
+          MetricGrade--;
         }
       }
       
@@ -608,7 +833,7 @@ void MetricGradePage()
         millisButton = millis();
         buttonENTERstate = false;
         
-        eeprom.write(lever/10, LEVER_ADD_EEPROM);
+        eeprom.write(MetricGrade, METRICGRADE_ADD_EEPROM);
         SettingMenuSelectionState = true;
         resume = true;
       }
@@ -623,24 +848,37 @@ void ImperialGradePage()
   int posx = 25;
   int posy = 25;
   ssd1306_clearScreen();
-  char s[10];
   boolean resume = false;
+
+  
   while(resume == false)
   {
     ssd1306_setFixedFont(ssd1306xled_font8x16);
-    ssd1306_printFixed(0, 0, "Lever Setting", STYLE_NORMAL);
+    ssd1306_printFixed(0, 0, "Imperial Grade", STYLE_NORMAL);
     
-    sprintf(s, "%d mm", lever);
-    ssd1306_printFixed(posx+30, HEIGHTOLED-posy+14, s, STYLE_NORMAL);
+    ssd1306_setFixedFont(ssd1306xled_font8x16);    
+    const char *GradeUnit;
     
+    if(ImperialGrade == IMPERIAL_G1){GradeUnit ="  G1";}
+    if(ImperialGrade == IMPERIAL_G2){GradeUnit = "  G2";}
+    if(ImperialGrade == IMPERIAL_G2){GradeUnit = "  G5";}
+    if(ImperialGrade == IMPERIAL_G7){GradeUnit = "  G7";}
+    if(ImperialGrade == IMPERIAL_G8){GradeUnit = "  G8";}
+    if(ImperialGrade == IMPERIAL_A449){GradeUnit = "A449";}
+    if(ImperialGrade == IMPERIAL_A490){GradeUnit = "A490";}
+    if(ImperialGrade == IMPERIAL_A36){GradeUnit = " G36";}
+    if(ImperialGrade == IMPERIAL_G1045){GradeUnit = "G1045";}
+    if(ImperialGrade == IMPERIAL_G4140){GradeUnit = "G4140";}
+    
+    ssd1306_printFixed(55, 28, GradeUnit, STYLE_NORMAL);   
+     
     if(buttonUPstate == true) 
       {
         millisButton = millis();
         buttonUPstate = false;
-        if(lever < LEVERMAX)
+        if(ImperialGrade < 9)
         {
-          ssd1306_clearScreen();
-          lever += 100;
+          ImperialGrade++;
         }
       }
             
@@ -648,10 +886,9 @@ void ImperialGradePage()
       {
         millisButton = millis();
         buttonDOWNstate = false;
-        if(lever > LEVERMIN)
+        if(ImperialGrade > 0)
         {
-          ssd1306_clearScreen();
-          lever -= 100;
+          ImperialGrade--;
         }
       }
       
@@ -660,7 +897,7 @@ void ImperialGradePage()
         millisButton = millis();
         buttonENTERstate = false;
         
-        eeprom.write(lever/10, LEVER_ADD_EEPROM);
+        eeprom.write(ImperialGrade, IMPERIALGRADE_ADD_EEPROM);
         SettingMenuSelectionState = true;
         resume = true;
       }

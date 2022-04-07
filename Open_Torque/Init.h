@@ -104,16 +104,16 @@
 #define UNC 1
 
 //define imperial grade 
-#define G1 0
-#define G2 1
-#define G5 2
-#define G7 3
-#define G8 4
-#define A449 5
-#define A490 6
-#define A36 7
-#define G1045 8
-#define G4140 9
+#define IMPERIAL_G1 0
+#define IMPERIAL_G2 1
+#define IMPERIAL_G5 2
+#define IMPERIAL_G7 3
+#define IMPERIAL_G8 4
+#define IMPERIAL_A449 5
+#define IMPERIAL_A490 6
+#define IMPERIAL_A36 7
+#define IMPERIAL_G1045 8
+#define IMPERIAL_G4140 9
 
 //define metric grade
 #define METRIC_5_6 0
