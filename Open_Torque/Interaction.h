@@ -1,3 +1,7 @@
+/*
+This page is used just to manage the interrupts and buttons.
+*/
+
 #ifndef INTERACTION_H
 #define INTERACTION_H
 

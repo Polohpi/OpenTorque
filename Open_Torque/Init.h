@@ -1,10 +1,22 @@
+/*
+This page is used for all the fixed values, delays, EEPROM addresses, physical pins, units. 
+
+- stucture of all menus
+- Array of data for the presaved torques values for metric UNF UNC screws
+
+
+*/
+
 #ifndef INIT_H
 #define INIT_H
 
+// screen
 #define HEIGHTOLED 39
 #define WIDHTOLED 104
 #define HEIGHTCHAR 32
 #define WIDHTCHAR 24
+
+
 #define DELAYBUZZON 0
 #define DELAYBUZZOFF 1000
 
@@ -14,11 +26,13 @@
 #define BUTTONUP 8
 #define BUTTONDOWN 7
 
-//define delays
+//define delays in ms
 #define DELAYBUTTON 150
 #define DELAYTARE 2000
 #define DELAYCALIBRATION 1000
 #define DELAYMEASURE 100
+
+//min max values
 #define TORQUEMIN 2
 #define LEVERMAX 2000
 #define LEVERMIN 200
@@ -38,14 +52,16 @@
 #define CALIBRATIONVALUE_ADD_EEPROM 15
 #define LUB_ADD_EEPROM 16
 
+//define mode selection value, used later on in the menu
 #define MANUALMODE 0
 #define METRICMODE 1
 #define IMPERIALUNFMODE 2
 #define IMPERIALUNCMODE 3
 #define ANGULARMODE 4
 #define SCALEMODE 5
-#define ANGULARMODE 6
+#define UNSCREWMODE 6 //no created yet
 
+//define weight units selection values
 #define G 0
 #define KG 1
 #define N 2
@@ -53,25 +69,30 @@
 #define POUND 4
 #define OUNCE 5
 
+//define length units selection values 
 #define CM 0
 #define DM 1
 #define M 2
 #define INCH 3
 #define FEET 4
 
+//pins of the lodcell amplifier 
 #define HX711SCK 2
 #define HX711DOUT 3
 
+//how many raws and columns for the presaved torque values. Same number of raws and columns for a lubed or dryed environment
 #define METRIC_ROWS 13
 #define METRIC_COLUMNS 7
 
+//same for UNC screws
 #define IMPERIAL_UNC_ROWS 10
 #define IMPERIAL_UNC_COLUMNS 10
 
+//same for UNF screws
 #define IMPERIAL_UNF_ROWS 10
 #define IMPERIAL_UNF_COLUMNS 9
 
-//define metric size 
+//define metric selection value 
 #define M4 0
 #define M5 1
 #define M6 2
@@ -86,7 +107,7 @@
 #define M24 11
 #define M27 12
 
-//define imperial size 
+//define imperial selection value 
 
 #define IMPERIAL_1_4 0
 #define IMPERIAL_5_16 1
@@ -99,11 +120,11 @@
 #define IMPERIAL_7_8 8
 #define IMPERIAL_1_0 9
 
-//define imperial tread 
+//define imperial tread size selection value 
 #define UNF 0
 #define UNC 1
 
-//define imperial grade 
+//define imperial grade  selection value
 #define IMPERIAL_G1 0
 #define IMPERIAL_G2 1
 #define IMPERIAL_G5 2
@@ -115,7 +136,7 @@
 #define IMPERIAL_G1045 8
 #define IMPERIAL_G4140 9
 
-//define metric grade
+//define metric grade selection value 
 #define METRIC_5_6 0
 #define METRIC_5_8 1
 #define METRIC_6_8 2
@@ -137,13 +158,13 @@ int AngularTarget;
 int AngularTare = 0;;
 int LastMode;
 
+//those unit will contain and manipulate the values set earlier with #define
 int WeightUnit;
 int LengthUnit;
 const char *Unit;
 float WeightRatio;
 float LengthRatio;
 double CalibrationVal;
-
 int ImperialThread;
 int ImperialSize;
 int ImperialGrade;
@@ -162,11 +183,13 @@ boolean PauseAcceuil = false;
 
 boolean Lub;
 
+// those value are just change by the attachInterrupt function. Those value are used by pages to react at the press of a button. See interaction.h
 boolean buttonUPstate = false;
 boolean buttonDOWNstate = false;
 boolean buttonENTERstate = false;
 boolean buttonENTER2state = false;
 
+// those value are changed to true to show the menu. True the menu is on screen. False Page are on screen.
 boolean MainMenuSelectionState = false;
 boolean ModeMenuSelectionState = false;
 boolean TorqueMenuSelectionState = false;
@@ -176,6 +199,8 @@ boolean UnitMenuSelectionState = false;
 boolean ImperialMenuSelectionState = false;
 boolean ScrewGradeMenuSelectionState = false;
 
+
+// Menu are in part, set here, There is also info in Open_Torque.ino
 const char *MainItems[] =
 {
     "Back",
@@ -266,18 +291,18 @@ float Metric_LUB[ METRIC_ROWS ] [ METRIC_COLUMNS ] =
 
 float Metric_NOLUB[ METRIC_ROWS ] [ METRIC_COLUMNS ] =
 { //5.6   5.8     6.8     8.8     9.8     10.9    12.9
-  {1.51,  2.11,   2.42,   3.22,   3.66,   4.74, 5.5},   //M4
-  {3,     4.2,    4.81,   6.4,    7.27,   9.4,  11},    //M5
-  {5.2,   7.2,    8.3,    11.1,   12.57,  16.3, 19.1},  //M6
-  {12.6,  17.7,   20,     27,     30.62,  39,   46},    //M8
-  {25,    35,     40,     53,     61,     78,   92},    //M10
-  {43,    60,     69,     92,     105,    136,  159},   //M12
-  {69,    97,     111,    148,    167,    218,  255},   //M14
-  {108,   152,    174,    232,    262,    341,  399},   //M16
-  {149,   209,    239,    330,    0,      0,    0},     //M18
-  {213,   298,    341,    0,      0,      0,    0},     //M20
-  {293,   411,    0,      0,      0,      0,    0},     //M22
-  {366,   0,      0,      0,      0,      0,    0}      //M24
+  {1.51,  2.11,   2.42,   3.22,   3.66,   4.74,   5.5},   //M4
+  {3,     4.2,    4.81,   6.4,    7.27,   9.4,    11},    //M5
+  {5.2,   7.2,    8.3,    11.1,   12.57,  16.3,   19.1},  //M6
+  {12.6,  17.7,   20,     27,     30.62,  39,     46},    //M8
+  {25,    35,     40,     53,     61,     78,     92},    //M10
+  {43,    60,     69,     92,     105,    136,    159},   //M12
+  {69,    97,     111,    148,    167,    218,    255},   //M14
+  {108,   152,    174,    232,    262,    341,    399},   //M16
+  {149,   209,    239,    330,    0,      0,      0},     //M18
+  {213,   298,    341,    0,      0,      0,      0},     //M20
+  {293,   411,    0,      0,      0,      0,      0},     //M22
+  {366,   0,      0,      0,      0,      0,      0}      //M24
 };
 
 //double float array, Imperial UNC torque with lubricated components

@@ -5,6 +5,9 @@
 #include "Interaction.h"
 #include "Page.h"
 
+/*_____________________________________________________________MEASURE________________________________________________________
+Measure is a function that tkaes the raw value from the loadcell 
+*/
 void Measure()
 {
   if(millis() > millisMeasure + DELAYMEASURE)
@@ -39,6 +42,9 @@ void Measure()
   yield();
 }
 
+/*_____________________________________________________________WATCH TARGET BUZZ ()________________________________________________________
+This function is used to make a buzz noize the bips faster as the value read by the wrench reach the target value
+*/
 void WatchTargetBuzz()
 {
   if(Torque > target*prctbuzz && valmeasure > 200)
@@ -62,6 +68,10 @@ void WatchTargetBuzz()
   else{digitalWrite(BUZZ, LOW);}
   yield();
 }
+
+/*_____________________________________________________________IMPERIAL MENU SELECTION ()________________________________________________________
+this menu select the wich of the UNF or UNC mode to launch
+*/
 
 void ImperialMenuSelection()
 {
@@ -120,6 +130,9 @@ void ImperialMenuSelection()
   yield();
 }
 
+/*_____________________________________________________________SCREW MENU SELECTION STATE ()________________________________________________________
+This menu is used to select wich of the preset screw mdoe to use betwen metric and imperial
+*/
 void ScrewMenuSelection()
 {
   if(ScrewMenuSelectionState == true)
@@ -177,6 +190,9 @@ void ScrewMenuSelection()
   yield();
 }
 
+/*_____________________________________________________________SCREW MENU SELECTION STATE ()________________________________________________________
+This menu is used to select wich of the torque mode to use (preset screws or manual)
+*/
 void TorqueMenuSelection()
 {
   if(TorqueMenuSelectionState == true)
@@ -233,6 +249,9 @@ void TorqueMenuSelection()
   yield();
 }
 
+/*_____________________________________________________________MODE MENU SELECTION ()________________________________________________________
+This menu is used to select wich of the mode to use between torque related mode, angular and scale
+*/
 void ModeMenuSelection()
 {
   if(ModeMenuSelectionState == true)
@@ -294,6 +313,10 @@ void ModeMenuSelection()
   yield();
 }
 
+/*_____________________________________________________________UNIT MENU SELECTION ()________________________________________________________
+This menu is used to select wich of unit type to change
+*/
+
 void UnitMenuSelection()
 {
   if(UnitMenuSelectionState == true)
@@ -347,6 +370,10 @@ void UnitMenuSelection()
   }
   yield();
 }
+
+/*_____________________________________________________________SETTING MENU SELECTION ()________________________________________________________
+This menu is used to change the main setting of the wrench (lever, screw grade, lub and calibration)
+*/
 
 void SettingMenuSelection()
 {
@@ -421,6 +448,10 @@ void SettingMenuSelection()
   yield();
 }
 
+/*_____________________________________________________________MAIN MENU SELECTION ()________________________________________________________
+This main menu is used to quick tare theloadcell, acces mode settings etc
+*/
+
 void MainMenuSelection()
 {
   if(MainMenuSelectionState == true)
@@ -487,6 +518,9 @@ void MainMenuSelection()
   yield();
 }
 
+/*_____________________________________________________________SCREW GRADE MENU SELECTION STATE ()________________________________________________________
+This menu is used to change the grade of metric and imperial screws
+*/
 void ScrewGradeMenuSelection()
 {
   if(ScrewGradeMenuSelectionState == true)

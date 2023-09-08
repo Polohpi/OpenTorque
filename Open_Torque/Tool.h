@@ -1,3 +1,7 @@
+/*
+This page contain all of the tools used by the wrench. 
+*/
+
 #ifndef TOOL_h
 #define TOOL_h
 
@@ -11,12 +15,14 @@
 #include <MPU6050_tockn.h>
 #include <Wire.h>
 
+
+//creation of different object
 AT24C256 eeprom = AT24C256();
 HX711_ADC LoadCell(HX711DOUT, HX711SCK);
 Buzzer buzzer(BUZZ);
 MPU6050 mpu6050(Wire);
 
-
+//creation of the menu objects
 SAppMenu MainMenu;
 SAppMenu ModeMenu;
 SAppMenu SettingMenu;
@@ -26,16 +32,23 @@ SAppMenu ScrewMenu;
 SAppMenu ImperialMenu;
 SAppMenu ScrewGradeMenu;
 
+
+/*_____________________________________________________________EEPROM FLOAT WRITE ()________________________________________________________
+used to write float values to eeprom. May be used to store calibration value. Not in use in this version
+*/
+
 void EEPROMFloatWrite(float Val)
 {
   String valtxt = "";
   valtxt =(String)Val;
   
+  #ifdef DEBUGOT
   for(int i= CALIBRATIONVALUE_ADD_EEPROM; i<valtxt.length()+CALIBRATIONVALUE_ADD_EEPROM; i++)
   {
     Serial.println("valtxt[" + (String)i+ "] : " + (String)valtxt[i-CALIBRATIONVALUE_ADD_EEPROM]);
     yield();
   }
+  #endif
 
   for(int i = CALIBRATIONVALUE_ADD_EEPROM; i<valtxt.length()+1+CALIBRATIONVALUE_ADD_EEPROM; i++)
   {
@@ -61,6 +74,10 @@ void EEPROMFloatWrite(float Val)
     yield();  
   }
 }
+
+/*_____________________________________________________________EEPROM FLOAT WRITE ()________________________________________________________
+same thing to read float value from eeprom
+*/
 
 double EEPROMFloatRead()
 {
@@ -91,6 +108,10 @@ double EEPROMFloatRead()
   return valfloat;
 }
 
+
+/*_____________________________________________________________PRINT VAL________________________________________________________
+printval is used to manage the number shown at screen
+*/
 void printval(int x, int y, int widht, int value)
 {
 
@@ -120,6 +141,9 @@ void printval(int x, int y, int widht, int value)
   yield();
 }
 
+/*_____________________________________________________________LoadCellTare()________________________________________________________
+LoadCellTare is used to tare the loadcell
+*/
 void LoadCellTare()
 {
   ssd1306_clearScreen();
@@ -136,6 +160,9 @@ void LoadCellTare()
   yield();
 }
 
+/*_____________________________________________________________LoadCellCalibrate()________________________________________________________
+LoadCellCalibrate is used to calibrate the loadcell
+*/
 void LoadCellCalibrate(int Val)
 {
 
@@ -156,6 +183,12 @@ void LoadCellCalibrate(int Val)
   yield();
 }
 
+/*_____________________________________________________________SetUnits()________________________________________________________
+SetUnit is used to set the "Unit" value that is used on screen. It also set the "Lengthratio" and "Weightvalue" value. Both are used in the function Measure() (see Calcul.h)
+It's good to know that the basic measure available is in the ISO units kind of (g, m). Then the units set in the wrench are taken into account and the value is on screen
+
+Raw loadcell value -> valmeasure -> Torque in whatever units is set -> screen
+*/
 void SetUnit()
 {
   if(WeightUnit == G)
@@ -225,6 +258,10 @@ void SetUnit()
 
 }
 
+
+/*_____________________________________________________________LoadCellRead()________________________________________________________
+Fucntion called the get the raw data from the cell. Used in Measure(). See Calcul.h
+*/
 float LoadCellRead()
 {
   static boolean newDataReady = 0;
